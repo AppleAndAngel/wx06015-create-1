@@ -4,13 +4,28 @@ import { CellGroup, Cell, Tag, showConfirmDialog, showToast } from 'vant'
 import { useUserStore } from '@/stores/user'
 import { useCartStore } from '@/stores/cart'
 import { useOrderStore } from '@/stores/order'
+import { useGroupBuyStore } from '@/stores/groupBuy'
+import { onMounted, computed } from 'vue'
 
 const router = useRouter()
 const userStore = useUserStore()
 const cartStore = useCartStore()
 const orderStore = useOrderStore()
+const groupBuyStore = useGroupBuyStore()
 
 const userInfo = userStore.userInfo
+
+const pendingGroupCount = computed(() => groupBuyStore.pendingMyOrders.length)
+
+onMounted(async () => {
+  if (userStore.isLoggedIn) {
+    try {
+      await groupBuyStore.fetchMyOrders()
+    } catch (e) {
+      console.error('[Center] 加载拼团数据失败', e)
+    }
+  }
+})
 
 const orderShortcuts = [
   { label: '待付款', status: 'pending', icon: 'pending-payment' },
@@ -100,6 +115,23 @@ const onLogout = () => {
           >
             {{ orderCounts[item.status] }}
           </van-tag>
+        </div>
+      </div>
+    </div>
+
+    <div class="center-page__group-buy">
+      <div class="center-page__section-head">
+        <span class="center-page__section-title">我的拼团</span>
+        <span class="center-page__section-more" @click="router.push('/my-groups')">全部拼团</span>
+      </div>
+      <div class="center-page__group-entry" @click="router.push('/my-groups')">
+        <div class="group-entry-left">
+          <span class="group-entry-icon">🎁</span>
+          <span class="group-entry-text">查看全部拼团记录</span>
+        </div>
+        <div class="group-entry-right">
+          <van-tag v-if="pendingGroupCount > 0" type="danger" round>{{ pendingGroupCount }}个进行中</van-tag>
+          <van-icon name="arrow" size="14" color="#999" />
         </div>
       </div>
     </div>
@@ -253,6 +285,29 @@ const onLogout = () => {
     right: -8px;
   }
 
+  &__group-buy {
+    margin: 16px 16px 0;
+    background: $bg-card;
+    border-radius: $radius-lg;
+    box-shadow: $shadow;
+    padding: 16px;
+  }
+
+  &__group-entry {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    background: linear-gradient(135deg, #FFF5F0, #FFE8DC);
+    border-radius: $radius-sm;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
   &__menu {
     margin-top: 16px;
   }
@@ -266,5 +321,27 @@ const onLogout = () => {
       color: $danger;
     }
   }
+}
+
+.group-entry-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.group-entry-icon {
+  font-size: 20px;
+}
+
+.group-entry-text {
+  font-size: 14px;
+  color: $text-primary;
+  font-weight: 500;
+}
+
+.group-entry-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 </style>

@@ -11,6 +11,7 @@ declare module 'vue' {
     AppHeader: typeof import('./src/components/AppHeader.vue')['default']
     CountdownTimer: typeof import('./src/components/CountdownTimer.vue')['default']
     EmptyState: typeof import('./src/components/EmptyState.vue')['default']
+    GroupBuyCard: typeof import('./src/components/GroupBuyCard.vue')['default']
     ProductCard: typeof import('./src/components/ProductCard.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

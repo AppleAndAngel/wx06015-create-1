@@ -171,6 +171,10 @@ const goToSearch = () => {
 const goToCart = () => {
   router.push('/cart')
 }
+
+const goToGroupBuy = () => {
+  router.push('/group-buy')
+}
 </script>
 
 <template>
@@ -278,6 +282,20 @@ const goToCart = () => {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="group-entry-section animate-in" @click="goToGroupBuy">
+          <div class="group-entry-banner">
+            <div class="group-entry-left">
+              <span class="group-entry-tag">拼团购</span>
+              <h3 class="group-entry-title">双人拼团 立省20%</h3>
+              <p class="group-entry-desc">邀请好友一起买，更划算</p>
+            </div>
+            <div class="group-entry-right">
+              <span class="group-entry-btn">去拼团</span>
+              <van-icon name="arrow" size="16" color="#fff" />
             </div>
           </div>
         </div>
@@ -822,5 +840,67 @@ const goToCart = () => {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
+}
+
+.group-entry-section {
+  margin: 16px 16px 0;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+  &:active {
+    transform: scale(0.99);
+  }
+}
+
+.group-entry-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #FF6B35, #FF8C42);
+  border-radius: $radius-md;
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.25);
+  color: #fff;
+}
+
+.group-entry-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.group-entry-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.group-entry-title {
+  font-size: 18px;
+  font-weight: 700;
+  font-family: $font-display;
+  margin: 2px 0 0;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.group-entry-desc {
+  font-size: 12px;
+  opacity: 0.9;
+  margin: 2px 0 0;
+}
+
+.group-entry-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.group-entry-btn {
+  font-size: 13px;
+  font-weight: 600;
 }
 </style>

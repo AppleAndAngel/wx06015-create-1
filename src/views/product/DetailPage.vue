@@ -1,18 +1,29 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getProductById } from '@/mock/products'
 import { useCartStore } from '@/stores/cart'
 import { useCart } from '@/composables/useCart'
+import { useGroupBuyStore } from '@/stores/groupBuy'
 import SpecPopup from '@/components/SpecPopup.vue'
 import AppHeader from '@/components/AppHeader.vue'
+import { showLoadingToast, closeToast, showToast } from 'vant'
 
 const route = useRoute()
 const router = useRouter()
 const cartStore = useCartStore()
+const groupBuyStore = useGroupBuyStore()
 const { addToCart } = useCart()
 
 const product = computed(() => getProductById(Number(route.params.id)))
+const groupBuyProduct = computed(() => {
+  if (!product.value) return null
+  return groupBuyStore.products.find(p => p.productId === product.value!.id) || null
+})
+const activeGroup = computed(() => {
+  if (!groupBuyProduct.value) return null
+  return groupBuyStore.activeOrders.find(o => o.groupBuyProductId === groupBuyProduct.value!.id) || null
+})
 const showSpec = ref(false)
 const specAction = ref<'cart' | 'buy'>('cart')
 const selectedSpecs = ref<Record<string, string>>({})
@@ -56,6 +67,30 @@ const handleAction = (action: 'cart' | 'buy') => {
 }
 
 const goBack = () => router.back()
+
+function goToGroupBuy() {
+  if (!groupBuyProduct.value) return
+  router.push(`/group-buy/${groupBuyProduct.value.id}`)
+}
+
+function goJoinGroup() {
+  if (!activeGroup.value) {
+    goToGroupBuy()
+    return
+  }
+  router.push(`/group-detail/${activeGroup.value.id}`)
+}
+
+onMounted(async () => {
+  try {
+    await Promise.all([
+      groupBuyStore.fetchProducts(),
+      groupBuyStore.fetchActiveOrders(),
+    ])
+  } catch (e) {
+    console.error('[ProductDetail] 加载拼团数据失败', e)
+  }
+})
 </script>
 
 <template>
@@ -75,6 +110,21 @@ const goBack = () => router.back()
           <span class="detail-page__original-price">¥{{ product.originalPrice.toFixed(2) }}</span>
           <span class="detail-page__sales">已售{{ product.sales }}件</span>
         </div>
+
+        <div class="group-buy-entry" v-if="groupBuyProduct" @click="goToGroupBuy">
+          <div class="group-buy-entry__left">
+            <span class="group-buy-entry__tag">拼团购</span>
+            <span class="group-buy-entry__price">
+              ¥{{ groupBuyProduct.groupPrice.toFixed(2) }}
+              <span class="group-buy-entry__save">省¥{{ (product.price - groupBuyProduct.groupPrice).toFixed(2) }}</span>
+            </span>
+          </div>
+          <div class="group-buy-entry__right">
+            <span>{{ groupBuyProduct.groupSize }}人拼团</span>
+            <van-icon name="arrow" size="12" />
+          </div>
+        </div>
+
         <h1 class="detail-page__name">{{ product.name }}</h1>
         <p class="detail-page__subtitle">{{ product.subtitle }}</p>
         <div class="detail-page__tags">
@@ -133,7 +183,23 @@ const goBack = () => router.back()
         </div>
       </div>
       <van-button class="detail-page__btn detail-page__btn--cart" @click="handleAction('cart')">加入购物车</van-button>
-      <van-button class="detail-page__btn detail-page__btn--buy" @click="handleAction('buy')">立即购买</van-button>
+      <van-button
+        v-if="!groupBuyProduct"
+        class="detail-page__btn detail-page__btn--buy"
+        @click="handleAction('buy')"
+      >立即购买</van-button>
+      <template v-else>
+        <van-button
+          class="detail-page__btn detail-page__btn--buy"
+          @click="handleAction('buy')"
+        >单独购买</van-button>
+        <van-button
+          class="detail-page__btn detail-page__btn--group"
+          @click="activeGroup ? goJoinGroup() : goToGroupBuy()"
+        >
+          {{ activeGroup ? '去参团' : '发起拼团' }}
+        </van-button>
+      </template>
     </div>
 
     <SpecPopup
@@ -390,7 +456,67 @@ const goBack = () => router.back()
       background: $primary !important;
       border-color: $primary !important;
       color: #fff !important;
+      margin-right: 8px;
     }
+
+    &--group {
+      background: linear-gradient(135deg, #FF6B35, #FF8C42) !important;
+      border-color: #FF6B35 !important;
+      color: #fff !important;
+    }
+  }
+}
+
+.group-buy-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 12px 0 4px;
+  padding: 12px 14px;
+  background: linear-gradient(135deg, #FFF5F0, #FFE8DC);
+  border-radius: $radius-sm;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__tag {
+    padding: 2px 8px;
+    background: linear-gradient(135deg, #FF6B35, #FF8C42);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 4px;
+  }
+
+  &__price {
+    color: #FF6B35;
+    font-weight: 700;
+    font-size: 16px;
+  }
+
+  &__save {
+    font-size: 11px;
+    color: #FF6B35;
+    font-weight: 500;
+    margin-left: 4px;
+  }
+
+  &__right {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 12px;
+    color: #FF6B35;
+    font-weight: 500;
   }
 }
 </style>

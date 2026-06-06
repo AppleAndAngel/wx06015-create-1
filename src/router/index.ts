@@ -12,6 +12,10 @@ import AddressListPage from '@/views/user/AddressListPage.vue'
 import AddressEditPage from '@/views/user/AddressEditPage.vue'
 import LoginPage from '@/views/login/LoginPage.vue'
 import SearchPage from '@/views/search/SearchPage.vue'
+import GroupBuyListPage from '@/views/group-buy/ListPage.vue'
+import GroupBuyDetailPage from '@/views/group-buy/DetailPage.vue'
+import GroupDetailPage from '@/views/group-buy/GroupDetailPage.vue'
+import MyGroupsPage from '@/views/group-buy/MyGroupsPage.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -75,6 +79,24 @@ const router = createRouter({
     {
       path: '/search',
       component: SearchPage,
+    },
+    {
+      path: '/group-buy',
+      component: GroupBuyListPage,
+    },
+    {
+      path: '/group-buy/:id',
+      component: GroupBuyDetailPage,
+    },
+    {
+      path: '/group-detail/:id',
+      component: GroupDetailPage,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/my-groups',
+      component: MyGroupsPage,
+      meta: { requiresAuth: true },
     },
   ],
 })

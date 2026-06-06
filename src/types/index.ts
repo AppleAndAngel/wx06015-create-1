@@ -124,3 +124,55 @@ export interface PaymentResult {
   payMethod: 'wechat' | 'alipay' | 'balance'
   payTime?: string
 }
+
+export interface GroupBuyProduct {
+  id: number
+  productId: number
+  product: Product
+  groupPrice: number
+  originalPrice: number
+  groupSize: number
+  currentCount: number
+  endTime: string
+  discount: string
+}
+
+export interface GroupBuyMember {
+  id: number
+  userId: number
+  nickname: string
+  avatar: string
+  isInitiator: boolean
+  joinedAt: string
+}
+
+export interface GroupBuyOrder {
+  id: number
+  groupNo: string
+  productId: number
+  product: Product
+  groupPrice: number
+  groupSize: number
+  currentCount: number
+  initiatorId: number
+  initiatorNickname: string
+  initiatorAvatar: string
+  members: GroupBuyMember[]
+  status: 'pending' | 'success' | 'failed'
+  endTime: string
+  createdAt: string
+  specValues: Record<string, string>
+  quantity: number
+}
+
+export interface CreateGroupBuyParams {
+  productId: number
+  specValues: Record<string, string>
+  quantity: number
+}
+
+export interface JoinGroupBuyParams {
+  groupId: number
+  specValues: Record<string, string>
+  quantity: number
+}
