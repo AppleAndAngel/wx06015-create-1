@@ -96,6 +96,7 @@ export const activeGroupOrders: GroupBuyOrder[] = [
   {
     id: 1001,
     groupNo: 'GB20260606001',
+    groupBuyProductId: 1,
     productId: 1,
     product: getProductById(1)!,
     groupPrice: 9.9,
@@ -114,6 +115,7 @@ export const activeGroupOrders: GroupBuyOrder[] = [
   {
     id: 1002,
     groupNo: 'GB20260606002',
+    groupBuyProductId: 4,
     productId: 7,
     product: getProductById(7)!,
     groupPrice: 49.9,
@@ -144,6 +146,7 @@ export const myGroupOrders: GroupBuyOrder[] = [
   {
     id: 1003,
     groupNo: 'GB20260606003',
+    groupBuyProductId: 2,
     productId: 2,
     product: getProductById(2)!,
     groupPrice: 22.9,
@@ -179,6 +182,7 @@ export const myGroupOrders: GroupBuyOrder[] = [
   {
     id: 1004,
     groupNo: 'GB20260606004',
+    groupBuyProductId: 5,
     productId: 10,
     product: getProductById(10)!,
     groupPrice: 45.9,
@@ -235,6 +239,7 @@ export function createGroupBuy(productId: number, specValues: Record<string, str
   const newOrder: GroupBuyOrder = {
     id: Date.now(),
     groupNo: `GB${Date.now()}`,
+    groupBuyProductId: groupProduct.id,
     productId,
     product,
     groupPrice: groupProduct.groupPrice,

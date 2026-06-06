@@ -31,7 +31,7 @@ async function loadData() {
   showLoadingToast({ message: '加载中...', forbidClick: true })
   try {
     await groupBuyStore.fetchActiveOrders()
-    const { data } = await groupBuyStore.getProductByProductId(
+    await groupBuyStore.getProductByProductId(
       groupBuyStore.products.find(p => p.id === groupProductId.value)?.productId || 1
     )
     const gp = groupBuyStore.products.find(p => p.id === groupProductId.value)

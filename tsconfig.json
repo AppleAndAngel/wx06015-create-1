@@ -10,7 +10,6 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "preserve",
     "strict": false,
     "noImplicitAny": false,
     "noUnusedLocals": false,
@@ -21,12 +20,11 @@
     "experimentalDecorators": true,
     "strictNullChecks": false,
     "sourceMap": true,
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     },
     "types": ["vite/client", "node"]
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/env.d.ts"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue", "src/env.d.ts", "types/**/*.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

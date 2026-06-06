@@ -149,6 +149,7 @@ export interface GroupBuyMember {
 export interface GroupBuyOrder {
   id: number
   groupNo: string
+  groupBuyProductId: number
   productId: number
   product: Product
   groupPrice: number
