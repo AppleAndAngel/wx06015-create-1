@@ -8,7 +8,9 @@ export const defaultUser: User = {
   phone: '138****8888',
   nickname: '鲜集用户',
   avatar: img('happy young Chinese person avatar, modern style, clean background'),
-  token: 'mock_jwt_token_xianji_2026'
+  token: 'mock_jwt_token_xianji_2026',
+  isNewUser: true,
+  hasClaimedNewUserCoupon: false
 }
 
 export const addresses: Address[] = [

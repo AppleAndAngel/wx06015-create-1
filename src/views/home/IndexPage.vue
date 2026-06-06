@@ -1,16 +1,66 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCartStore } from '@/stores/cart'
+import { useUserStore } from '@/stores/user'
 import { mockCategories as categories } from '@/mock/categories'
 import { flashSaleProducts, products } from '@/mock/products'
 import ProductCard from '@/components/ProductCard.vue'
 import CountdownTimer from '@/components/CountdownTimer.vue'
+import { showToast, showLoadingToast, closeToast } from 'vant'
+import type { Product, NewUserZoneData } from '@/types'
 
 const router = useRouter()
 const cartStore = useCartStore()
+const userStore = useUserStore()
 
 const flashEndTime = computed(() => Date.now() + 2 * 60 * 60 * 1000)
+
+const newUserZoneData = ref<NewUserZoneData | null>(null)
+const isClaiming = ref(false)
+const couponEndTime = computed(() => {
+  if (newUserZoneData.value?.coupon?.endTime) {
+    return new Date(newUserZoneData.value.coupon.endTime).getTime()
+  }
+  return Date.now() + 7 * 24 * 60 * 60 * 1000
+})
+
+const showNewUserZone = computed(() => {
+  return userStore.isNewUser && !userStore.hasClaimedNewUserCoupon
+})
+
+const newUserProducts = computed<Product[]>(() => {
+  return newUserZoneData.value?.products ?? []
+})
+
+async function handleClaimCoupon() {
+  if (isClaiming.value) return
+  isClaiming.value = true
+  showLoadingToast({ message: '领取中...', forbidClick: true })
+  try {
+    await userStore.claimNewUserCoupon()
+    closeToast()
+    showToast({ message: '领取成功！首单立减15元', type: 'success' })
+  } catch (e: any) {
+    closeToast()
+    showToast({ message: e.message || '领取失败', type: 'fail' })
+  } finally {
+    isClaiming.value = false
+  }
+}
+
+function goToProductDetail(id: number) {
+  router.push(`/product/${id}`)
+}
+
+onMounted(async () => {
+  try {
+    const data = await userStore.getNewUserZoneData()
+    newUserZoneData.value = data
+  } catch (e) {
+    console.error('获取新人专区数据失败', e)
+  }
+})
 
 const refreshing = ref(false)
 const loading = ref(false)
@@ -93,6 +143,66 @@ const goToCart = () => {
               </div>
             </van-swipe-item>
           </van-swipe>
+        </div>
+
+        <div class="new-user-section animate-in" v-if="showNewUserZone && newUserZoneData">
+          <div class="new-user-banner">
+            <div class="new-user-banner__left">
+              <div class="new-user-banner__tag">新人专享</div>
+              <div class="new-user-banner__title">{{ newUserZoneData.banner.title }}</div>
+              <div class="new-user-banner__subtitle">{{ newUserZoneData.banner.subtitle }}</div>
+              <div class="new-user-banner__valid">
+                <van-icon name="clock-o" size="12" />
+                <span>有效期 7 天</span>
+              </div>
+            </div>
+            <div class="new-user-banner__right">
+              <div class="new-user-banner__coupon">
+                <div class="coupon-value">
+                  <span class="coupon-symbol">¥</span>
+                  <span class="coupon-amount">{{ newUserZoneData.banner.couponValue }}</span>
+                </div>
+                <div class="coupon-condition">满{{ newUserZoneData.banner.minAmount }}可用</div>
+              </div>
+              <van-button
+                type="primary"
+                class="claim-btn"
+                :loading="isClaiming"
+                @click.stop="handleClaimCoupon"
+              >
+                {{ userStore.hasClaimedNewUserCoupon ? '已领取' : '立即领取' }}
+              </van-button>
+            </div>
+          </div>
+
+          <div class="new-user-products">
+            <div class="section-header">
+              <h2 class="section-header__title">新人特惠</h2>
+              <span class="section-header__desc">精选好物 仅限新人</span>
+            </div>
+            <div class="new-user-grid">
+              <div
+                v-for="item in newUserProducts"
+                :key="item.id"
+                class="new-user-card"
+                @click="goToProductDetail(item.id)"
+              >
+                <div class="new-user-card__badge">新人价</div>
+                <img v-lazy="item.images[0]" :alt="item.name" class="new-user-card__img" />
+                <div class="new-user-card__content">
+                  <p class="new-user-card__name">{{ item.name }}</p>
+                  <div class="new-user-card__prices">
+                    <span class="new-user-card__price">¥{{ item.price.toFixed(1) }}</span>
+                    <span class="new-user-card__original">¥{{ item.originalPrice.toFixed(1) }}</span>
+                  </div>
+                  <div class="new-user-card__limit">
+                    <van-icon name="info-o" size="10" />
+                    <span>限购1件</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="flash-section animate-in">
@@ -298,6 +408,228 @@ const goToCart = () => {
 
   &::-webkit-scrollbar {
     display: none;
+  }
+}
+
+.new-user-section {
+  margin: 16px 16px 0;
+  background: $bg-card;
+  border-radius: $radius-md;
+  box-shadow: $shadow;
+  overflow: hidden;
+}
+
+.new-user-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+
+  &__left {
+    flex: 1;
+  }
+
+  &__tag {
+    display: inline-block;
+    padding: 2px 8px;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+
+  &__title {
+    font-size: 22px;
+    font-weight: 700;
+    font-family: $font-display;
+    margin-bottom: 4px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  &__subtitle {
+    font-size: 14px;
+    opacity: 0.95;
+    margin-bottom: 6px;
+  }
+
+  &__valid {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    opacity: 0.85;
+  }
+
+  &__right {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__coupon {
+    background: rgba(255, 255, 255, 0.95);
+    color: $danger;
+    padding: 8px 12px;
+    border-radius: $radius-sm;
+    text-align: center;
+    min-width: 80px;
+  }
+}
+
+.coupon-value {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  line-height: 1;
+
+  .coupon-symbol {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .coupon-amount {
+    font-size: 28px;
+    font-weight: 700;
+    font-family: $font-display;
+  }
+}
+
+.coupon-condition {
+  font-size: 10px;
+  color: $text-secondary;
+  margin-top: 2px;
+}
+
+.claim-btn {
+  min-width: 80px !important;
+  height: 32px !important;
+  font-size: 13px !important;
+  border-radius: 16px !important;
+  background: #fff !important;
+  color: #764ba2 !important;
+  border: none !important;
+
+  &--disabled {
+    opacity: 0.7;
+  }
+}
+
+.new-user-products {
+  padding: 12px;
+}
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding: 0 2px;
+
+  &__title {
+    font-size: 16px;
+    font-weight: 700;
+    color: $text-primary;
+    font-family: $font-display;
+    margin: 0;
+  }
+
+  &__desc {
+    font-size: 11px;
+    color: $text-secondary;
+  }
+}
+
+.new-user-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.new-user-card {
+  background: $bg;
+  border-radius: $radius-sm;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &__badge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: linear-gradient(135deg, #FF8C42, #FF6B35);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 0 0 $radius-sm 0;
+    z-index: 2;
+  }
+
+  &__img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__content {
+    padding: 8px 10px 10px;
+  }
+
+  &__name {
+    font-size: 13px;
+    color: $text-primary;
+    margin: 0 0 6px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+
+  &__prices {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+
+  &__price {
+    color: $danger;
+    font-weight: 700;
+    font-size: 16px;
+
+    &::before {
+      content: '¥';
+      font-size: 0.7em;
+    }
+  }
+
+  &__original {
+    color: $text-secondary;
+    text-decoration: line-through;
+    font-size: 11px;
+
+    &::before {
+      content: '¥';
+    }
+  }
+
+  &__limit {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
+    color: $primary;
   }
 }
 

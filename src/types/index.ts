@@ -82,6 +82,33 @@ export interface User {
   nickname: string
   avatar: string
   token: string
+  isNewUser: boolean
+  hasClaimedNewUserCoupon: boolean
+}
+
+export interface Coupon {
+  id: number
+  name: string
+  type: 'discount' | 'fixed'
+  value: number
+  minAmount: number
+  description: string
+  startTime: string
+  endTime: string
+  status: 'unused' | 'used' | 'expired'
+  scope: 'all' | 'category' | 'product'
+  scopeIds?: number[]
+}
+
+export interface NewUserZoneData {
+  banner: {
+    title: string
+    subtitle: string
+    couponValue: number
+    minAmount: number
+  }
+  coupon: Coupon
+  products: Product[]
 }
 
 export interface CreateOrderData {

@@ -1,4 +1,4 @@
-import type { Product } from '@/types'
+import type { Product, Coupon, NewUserZoneData } from '@/types'
 
 const img = (prompt: string) =>
   `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent(prompt)}&image_size=square_hd`
@@ -1139,7 +1139,7 @@ export const flashSaleProducts: Product[] = [
 ]
 
 export function getProductById(id: number): Product | undefined {
-  return [...products, ...flashSaleProducts].find((p) => p.id === id)
+  return [...products, ...flashSaleProducts, ...newUserProducts].find((p) => p.id === id)
 }
 
 export function getProductsByCategory(categoryId: number): Product[] {
@@ -1154,4 +1154,111 @@ export function searchProducts(keyword: string): Product[] {
       p.subtitle.toLowerCase().includes(kw) ||
       p.tags.some((t) => t.toLowerCase().includes(kw))
   )
+}
+
+export const newUserCoupon: Coupon = {
+  id: 999,
+  name: '新人专享首单立减',
+  type: 'fixed',
+  value: 15,
+  minAmount: 30,
+  description: '新人首单满30元立减15元，全场通用',
+  startTime: new Date().toISOString(),
+  endTime: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+  status: 'unused',
+  scope: 'all'
+}
+
+export const newUserProducts: Product[] = [
+  {
+    id: 201,
+    name: '山东红富士苹果',
+    subtitle: '新人专享 脆甜多汁',
+    price: 9.9,
+    originalPrice: 18.9,
+    images: [
+      img('fresh red Fuji apple on tree, close-up, bright sunlight, farm background'),
+      img('basket of red Fuji apples, clean white background, product photo'),
+      img('sliced red Fuji apple showing juicy interior, food photography')
+    ],
+    categoryId: 1,
+    specs: [
+      { name: '规格', values: ['5斤装'] },
+      { name: '产地', values: ['山东烟台'] }
+    ],
+    sales: 8856,
+    rating: 4.9,
+    tags: ['新人专享', '产地直发', '限购1件'],
+  },
+  {
+    id: 202,
+    name: '云南高原蓝莓',
+    subtitle: '新人特惠 花青素满满',
+    price: 19.9,
+    originalPrice: 49.9,
+    images: [
+      img('fresh blueberries on bush, close-up, morning dew'),
+      img('bowl of fresh blueberries, white background, product photo'),
+      img('handful of blueberries, food photography, vibrant color')
+    ],
+    categoryId: 1,
+    specs: [
+      { name: '规格', values: ['250g'] },
+      { name: '等级', values: ['特大果'] }
+    ],
+    sales: 6560,
+    rating: 4.8,
+    tags: ['新人专享', '有机', '限购1件'],
+  },
+  {
+    id: 203,
+    name: '正大土鸡蛋',
+    subtitle: '新人尝鲜 蛋黄饱满',
+    price: 12.9,
+    originalPrice: 32.0,
+    images: [
+      img('farm fresh eggs in basket, countryside, morning light'),
+      img('box of eggs, product photo, white background'),
+      img('cracked egg showing golden yolk, food photography')
+    ],
+    categoryId: 3,
+    specs: [
+      { name: '规格', values: ['20枚装'] },
+      { name: '品种', values: ['土鸡蛋'] }
+    ],
+    sales: 12820,
+    rating: 4.8,
+    tags: ['新人专享', '有机', '限购1件'],
+  },
+  {
+    id: 204,
+    name: '新希望鲜牛奶',
+    subtitle: '新人价 每日配送',
+    price: 5.9,
+    originalPrice: 13.0,
+    images: [
+      img('fresh milk bottle on farm, green pasture, morning light'),
+      img('glass of white milk, product photo, white background'),
+      img('fresh milk cartons, dairy product display')
+    ],
+    categoryId: 5,
+    specs: [
+      { name: '规格', values: ['950ml'] },
+      { name: '类型', values: ['全脂'] }
+    ],
+    sales: 18300,
+    rating: 4.9,
+    tags: ['新人专享', '当日鲜', '限购1件'],
+  }
+]
+
+export const newUserZoneData: NewUserZoneData = {
+  banner: {
+    title: '新人专享',
+    subtitle: '首单立减15元',
+    couponValue: 15,
+    minAmount: 30
+  },
+  coupon: newUserCoupon,
+  products: newUserProducts
 }
