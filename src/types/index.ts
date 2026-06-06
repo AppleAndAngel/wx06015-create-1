@@ -279,3 +279,82 @@ export interface GiftCardPaymentResult {
   payTime?: string
   cardCode?: string
 }
+
+export interface GroupMealPackage {
+  id: number
+  name: string
+  description: string
+  minPeople: number
+  maxPeople: number
+  pricePerPerson: number
+  originalPricePerPerson: number
+  image: string
+  tags: string[]
+  dishes: GroupMealDish[]
+  suitableFor: string
+}
+
+export interface GroupMealDish {
+  id: number
+  name: string
+  quantity: string
+  image: string
+}
+
+export interface GroupMealTimeSlot {
+  id: string
+  label: string
+  startTime: string
+  endTime: string
+  available: boolean
+}
+
+export interface GroupMealOrderItem {
+  packageId: number
+  packageName: string
+  packageImage: string
+  peopleCount: number
+  pricePerPerson: number
+  subtotal: number
+}
+
+export interface CreateGroupMealOrderParams {
+  items: GroupMealOrderItem[]
+  peopleCount: number
+  deliveryDate: string
+  timeSlotId: string
+  companyName: string
+  contactName: string
+  contactPhone: string
+  address: string
+  remark?: string
+  totalAmount: number
+  payAmount: number
+}
+
+export interface GroupMealOrder {
+  id: number
+  orderNo: string
+  items: GroupMealOrderItem[]
+  peopleCount: number
+  deliveryDate: string
+  timeSlotId: string
+  timeSlotLabel: string
+  companyName: string
+  contactName: string
+  contactPhone: string
+  address: string
+  remark?: string
+  totalAmount: number
+  payAmount: number
+  status: 'pending' | 'paid' | 'confirmed' | 'delivered' | 'cancelled'
+  payMethod?: 'wechat' | 'alipay' | 'balance'
+  payTime?: string
+  createdAt: string
+}
+
+export interface GroupMealOrderResult {
+  orderId: number
+  orderNo: string
+  payAmount: number
+}

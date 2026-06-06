@@ -22,6 +22,10 @@ import GiftCardListPage from '@/views/gift-card/ListPage.vue'
 import GiftCardPurchasePage from '@/views/gift-card/PurchasePage.vue'
 import GiftCardDetailPage from '@/views/gift-card/DetailPage.vue'
 import MyGiftCardsPage from '@/views/gift-card/MyCardsPage.vue'
+import GroupMealListPage from '@/views/group-meal/ListPage.vue'
+import GroupMealCheckoutPage from '@/views/group-meal/CheckoutPage.vue'
+import GroupMealOrderDetailPage from '@/views/group-meal/OrderDetailPage.vue'
+import GroupMealMyOrdersPage from '@/views/group-meal/MyOrdersPage.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -130,6 +134,25 @@ const router = createRouter({
     {
       path: '/my-gift-cards',
       component: MyGiftCardsPage,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/group-meal',
+      component: GroupMealListPage,
+    },
+    {
+      path: '/group-meal/checkout',
+      component: GroupMealCheckoutPage,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/group-meal/order/:id',
+      component: GroupMealOrderDetailPage,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/my-group-meals',
+      component: GroupMealMyOrdersPage,
       meta: { requiresAuth: true },
     },
   ],

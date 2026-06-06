@@ -183,6 +183,10 @@ const goToPresale = () => {
 const goToGiftCard = () => {
   router.push('/gift-card')
 }
+
+const goToGroupMeal = () => {
+  router.push('/group-meal')
+}
 </script>
 
 <template>
@@ -331,6 +335,20 @@ const goToGiftCard = () => {
             </div>
             <div class="gift-card-entry-right">
               <span class="gift-card-entry-btn">去选购</span>
+              <van-icon name="arrow" size="16" color="#fff" />
+            </div>
+          </div>
+        </div>
+
+        <div class="group-meal-entry-section animate-in" @click="goToGroupMeal">
+          <div class="group-meal-entry-banner">
+            <div class="group-meal-entry-left">
+              <span class="group-meal-entry-tag">企业团餐</span>
+              <h3 class="group-meal-entry-title">企业团餐 省心省力</h3>
+              <p class="group-meal-entry-desc">按人数选套餐，准时配送到公司</p>
+            </div>
+            <div class="group-meal-entry-right">
+              <span class="group-meal-entry-btn">去订购</span>
               <van-icon name="arrow" size="16" color="#fff" />
             </div>
           </div>
@@ -1060,6 +1078,68 @@ const goToGiftCard = () => {
 }
 
 .gift-card-entry-btn {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.group-meal-entry-section {
+  margin: 16px 16px 0;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+  &:active {
+    transform: scale(0.99);
+  }
+}
+
+.group-meal-entry-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #1E9A63, #2DB87B);
+  border-radius: $radius-md;
+  box-shadow: 0 4px 12px rgba(30, 154, 99, 0.25);
+  color: #fff;
+}
+
+.group-meal-entry-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.group-meal-entry-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.group-meal-entry-title {
+  font-size: 18px;
+  font-weight: 700;
+  font-family: $font-display;
+  margin: 2px 0 0;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.group-meal-entry-desc {
+  font-size: 12px;
+  opacity: 0.9;
+  margin: 2px 0 0;
+}
+
+.group-meal-entry-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.group-meal-entry-btn {
   font-size: 13px;
   font-weight: 600;
 }
