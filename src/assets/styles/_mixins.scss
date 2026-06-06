@@ -16,6 +16,10 @@
   white-space: nowrap;
 }
 
+@mixin text-ellipsis-1 {
+  @include text-ellipsis;
+}
+
 @mixin text-ellipsis-2 {
   display: -webkit-box;
   -webkit-box-orient: vertical;

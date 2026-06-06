@@ -16,6 +16,8 @@ import GroupBuyListPage from '@/views/group-buy/ListPage.vue'
 import GroupBuyDetailPage from '@/views/group-buy/DetailPage.vue'
 import GroupDetailPage from '@/views/group-buy/GroupDetailPage.vue'
 import MyGroupsPage from '@/views/group-buy/MyGroupsPage.vue'
+import PresaleIndexPage from '@/views/presale/IndexPage.vue'
+import MyReservationsPage from '@/views/presale/MyReservationsPage.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -96,6 +98,15 @@ const router = createRouter({
     {
       path: '/my-groups',
       component: MyGroupsPage,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/presale',
+      component: PresaleIndexPage,
+    },
+    {
+      path: '/presale/my',
+      component: MyReservationsPage,
       meta: { requiresAuth: true },
     },
   ],

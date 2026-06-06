@@ -177,3 +177,34 @@ export interface JoinGroupBuyParams {
   specValues: Record<string, string>
   quantity: number
 }
+
+export interface PresaleProduct {
+  id: number
+  productId: number
+  product: Product
+  presalePrice: number
+  originalPrice: number
+  saleTime: string
+  endTime: string
+  stock: number
+  reservationCount: number
+  seasonTag: string
+  description: string
+}
+
+export interface PresaleDay {
+  date: string
+  weekday: string
+  isToday: boolean
+  products: PresaleProduct[]
+}
+
+export interface Reservation {
+  id: number
+  presaleProductId: number
+  productName: string
+  productImage: string
+  saleTime: string
+  createdAt: string
+  notified: boolean
+}
