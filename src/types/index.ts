@@ -385,3 +385,56 @@ export interface AddToStockpileParams {
   category: string
   note?: string
 }
+
+export interface RecipeIngredient {
+  id: number
+  name: string
+  quantity: string
+  productId: number
+  product?: Product
+}
+
+export interface RecipeStep {
+  order: number
+  description: string
+  image?: string
+}
+
+export interface Recipe {
+  id: number
+  name: string
+  subtitle: string
+  coverImage: string
+  images: string[]
+  solarTerm: string
+  season: 'spring' | 'summer' | 'autumn' | 'winter'
+  difficulty: 'easy' | 'medium' | 'hard'
+  cookTime: string
+  servings: number
+  calories: number
+  description: string
+  healthBenefits: string[]
+  ingredients: RecipeIngredient[]
+  steps: RecipeStep[]
+  tips: string[]
+  tags: string[]
+  rating: number
+  viewCount: number
+}
+
+export interface SolarTerm {
+  name: string
+  englishName: string
+  date: string
+  season: 'spring' | 'summer' | 'autumn' | 'winter'
+  description: string
+  healthTip: string
+  icon: string
+  gradient: string
+}
+
+export interface SeasonalRecipeData {
+  currentSolarTerm: SolarTerm
+  solarTerms: SolarTerm[]
+  recipes: Recipe[]
+}

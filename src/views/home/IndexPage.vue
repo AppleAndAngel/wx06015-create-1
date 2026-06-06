@@ -191,6 +191,10 @@ const goToGroupMeal = () => {
 const goToStockpile = () => {
   router.push('/stockpile')
 }
+
+const goToSeasonalRecipe = () => {
+  router.push('/seasonal-recipe')
+}
 </script>
 
 <template>
@@ -367,6 +371,20 @@ const goToStockpile = () => {
             </div>
             <div class="stockpile-entry-right">
               <span class="stockpile-entry-btn">去看看</span>
+              <van-icon name="arrow" size="16" color="#fff" />
+            </div>
+          </div>
+        </div>
+
+        <div class="seasonal-recipe-entry-section animate-in" @click="goToSeasonalRecipe">
+          <div class="seasonal-recipe-entry-banner">
+            <div class="seasonal-recipe-entry-left">
+              <span class="seasonal-recipe-entry-tag">节气食谱</span>
+              <h3 class="seasonal-recipe-entry-title">应季而食 顺时而养</h3>
+              <p class="seasonal-recipe-entry-desc">按节气查看养生食谱，一键买齐所需食材</p>
+            </div>
+            <div class="seasonal-recipe-entry-right">
+              <span class="seasonal-recipe-entry-btn">去看看</span>
               <van-icon name="arrow" size="16" color="#fff" />
             </div>
           </div>
@@ -1220,6 +1238,68 @@ const goToStockpile = () => {
 }
 
 .stockpile-entry-btn {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.seasonal-recipe-entry-section {
+  margin: 16px 16px 0;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+  &:active {
+    transform: scale(0.99);
+  }
+}
+
+.seasonal-recipe-entry-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #66BB6A, #4CAF50);
+  border-radius: $radius-md;
+  box-shadow: 0 4px 12px rgba(102, 187, 106, 0.25);
+  color: #fff;
+}
+
+.seasonal-recipe-entry-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.seasonal-recipe-entry-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.seasonal-recipe-entry-title {
+  font-size: 18px;
+  font-weight: 700;
+  font-family: $font-display;
+  margin: 2px 0 0;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.seasonal-recipe-entry-desc {
+  font-size: 12px;
+  opacity: 0.9;
+  margin: 2px 0 0;
+}
+
+.seasonal-recipe-entry-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.seasonal-recipe-entry-btn {
   font-size: 13px;
   font-weight: 600;
 }
