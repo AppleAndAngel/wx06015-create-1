@@ -208,3 +208,74 @@ export interface Reservation {
   createdAt: string
   notified: boolean
 }
+
+export interface GiftCardDenomination {
+  id: number
+  name: string
+  value: number
+  price: number
+  description: string
+  image: string
+  tag?: string
+}
+
+export interface GiftCardTemplate {
+  id: number
+  name: string
+  theme: string
+  coverImage: string
+  bgGradient: string
+  textColor: string
+}
+
+export interface GiftCardRecipient {
+  name: string
+  phone: string
+  relation?: string
+}
+
+export interface GiftCardOrder {
+  id: number
+  orderNo: string
+  denominationId: number
+  denomination: GiftCardDenomination
+  templateId: number
+  template: GiftCardTemplate
+  recipient: GiftCardRecipient
+  message: string
+  totalAmount: number
+  payAmount: number
+  status: 'pending' | 'paid' | 'sent' | 'received' | 'expired'
+  payMethod?: 'wechat' | 'alipay' | 'balance'
+  payTime?: string
+  cardCode?: string
+  validFrom: string
+  validTo: string
+  createdAt: string
+  sender?: {
+    id: number
+    nickname: string
+    avatar: string
+  }
+}
+
+export interface CreateGiftCardOrderParams {
+  denominationId: number
+  templateId: number
+  recipient: GiftCardRecipient
+  message: string
+}
+
+export interface GiftCardOrderResult {
+  orderId: number
+  orderNo: string
+  payAmount: number
+}
+
+export interface GiftCardPaymentResult {
+  orderId: number
+  status: 'success' | 'failed' | 'pending'
+  payMethod: 'wechat' | 'alipay' | 'balance'
+  payTime?: string
+  cardCode?: string
+}

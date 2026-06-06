@@ -179,6 +179,10 @@ const goToGroupBuy = () => {
 const goToPresale = () => {
   router.push('/presale')
 }
+
+const goToGiftCard = () => {
+  router.push('/gift-card')
+}
 </script>
 
 <template>
@@ -313,6 +317,20 @@ const goToPresale = () => {
             </div>
             <div class="presale-entry-right">
               <span class="presale-entry-btn">去看看</span>
+              <van-icon name="arrow" size="16" color="#fff" />
+            </div>
+          </div>
+        </div>
+
+        <div class="gift-card-entry-section animate-in" @click="goToGiftCard">
+          <div class="gift-card-entry-banner">
+            <div class="gift-card-entry-left">
+              <span class="gift-card-entry-tag">礼品卡</span>
+              <h3 class="gift-card-entry-title">生鲜好礼 送亲送友</h3>
+              <p class="gift-card-entry-desc">挑选面额，写下祝福，送给家人朋友</p>
+            </div>
+            <div class="gift-card-entry-right">
+              <span class="gift-card-entry-btn">去选购</span>
               <van-icon name="arrow" size="16" color="#fff" />
             </div>
           </div>
@@ -980,6 +998,68 @@ const goToPresale = () => {
 }
 
 .presale-entry-btn {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.gift-card-entry-section {
+  margin: 16px 16px 0;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+  &:active {
+    transform: scale(0.99);
+  }
+}
+
+.gift-card-entry-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+  border-radius: $radius-md;
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.25);
+  color: #fff;
+}
+
+.gift-card-entry-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.gift-card-entry-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.gift-card-entry-title {
+  font-size: 18px;
+  font-weight: 700;
+  font-family: $font-display;
+  margin: 2px 0 0;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.gift-card-entry-desc {
+  font-size: 12px;
+  opacity: 0.9;
+  margin: 2px 0 0;
+}
+
+.gift-card-entry-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.gift-card-entry-btn {
   font-size: 13px;
   font-weight: 600;
 }

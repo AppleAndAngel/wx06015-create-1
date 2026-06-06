@@ -136,6 +136,22 @@ const onLogout = () => {
       </div>
     </div>
 
+    <div class="center-page__gift-card">
+      <div class="center-page__section-head">
+        <span class="center-page__section-title">我的礼品卡</span>
+        <span class="center-page__section-more" @click="router.push('/my-gift-cards')">全部礼品卡</span>
+      </div>
+      <div class="center-page__gift-entry" @click="router.push('/my-gift-cards')">
+        <div class="gift-entry-left">
+          <span class="gift-entry-icon">💝</span>
+          <span class="gift-entry-text">查看送出和收到的礼品卡</span>
+        </div>
+        <div class="gift-entry-right">
+          <van-icon name="arrow" size="14" color="#999" />
+        </div>
+      </div>
+    </div>
+
     <van-cell-group inset class="center-page__menu">
       <van-cell
         title="收货地址"
@@ -340,6 +356,51 @@ const onLogout = () => {
 }
 
 .group-entry-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.center-page__gift-card {
+  margin: 16px 16px 0;
+  background: $bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow;
+  padding: 16px;
+}
+
+.center-page__gift-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: linear-gradient(135deg, #FFF0F0, #FFE8DC);
+  border-radius: $radius-sm;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.gift-entry-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gift-entry-icon {
+  font-size: 20px;
+}
+
+.gift-entry-text {
+  font-size: 14px;
+  color: $text-primary;
+  font-weight: 500;
+}
+
+.gift-entry-right {
   display: flex;
   align-items: center;
   gap: 6px;

@@ -18,6 +18,10 @@ import GroupDetailPage from '@/views/group-buy/GroupDetailPage.vue'
 import MyGroupsPage from '@/views/group-buy/MyGroupsPage.vue'
 import PresaleIndexPage from '@/views/presale/IndexPage.vue'
 import MyReservationsPage from '@/views/presale/MyReservationsPage.vue'
+import GiftCardListPage from '@/views/gift-card/ListPage.vue'
+import GiftCardPurchasePage from '@/views/gift-card/PurchasePage.vue'
+import GiftCardDetailPage from '@/views/gift-card/DetailPage.vue'
+import MyGiftCardsPage from '@/views/gift-card/MyCardsPage.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -107,6 +111,25 @@ const router = createRouter({
     {
       path: '/presale/my',
       component: MyReservationsPage,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/gift-card',
+      component: GiftCardListPage,
+    },
+    {
+      path: '/gift-card/purchase/:denominationId',
+      component: GiftCardPurchasePage,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/gift-card/:id',
+      component: GiftCardDetailPage,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/my-gift-cards',
+      component: MyGiftCardsPage,
       meta: { requiresAuth: true },
     },
   ],
