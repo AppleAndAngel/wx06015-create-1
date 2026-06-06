@@ -160,13 +160,15 @@ function onClickCoupon() {
 }
 
 onMounted(async () => {
+  if (!userStore.isLoggedIn) {
+    router.replace({ path: '/login', query: { redirect: '/checkout' } })
+    return
+  }
   addressStore.fetchAddresses()
-  if (userStore.isLoggedIn) {
-    try {
-      await userStore.getCouponList()
-    } catch (e) {
-      console.error('获取优惠券列表失败', e)
-    }
+  try {
+    await userStore.getCouponList()
+  } catch (e) {
+    console.error('获取优惠券列表失败', e)
   }
 })
 </script>

@@ -26,7 +26,27 @@ const couponEndTime = computed(() => {
 })
 
 const showNewUserZone = computed(() => {
+  if (!userStore.isLoggedIn) {
+    return true
+  }
   return userStore.isNewUser && !userStore.hasClaimedNewUserCoupon
+})
+
+const canClaimCoupon = computed(() => {
+  if (!userStore.isLoggedIn) {
+    return true
+  }
+  return !userStore.hasClaimedNewUserCoupon
+})
+
+const claimButtonText = computed(() => {
+  if (!userStore.isLoggedIn) {
+    return '登录领取'
+  }
+  if (userStore.hasClaimedNewUserCoupon) {
+    return '已领取'
+  }
+  return '立即领取'
 })
 
 const newUserProducts = computed<Product[]>(() => {
@@ -35,6 +55,14 @@ const newUserProducts = computed<Product[]>(() => {
 
 async function handleClaimCoupon() {
   if (isClaiming.value) return
+  if (!userStore.isLoggedIn) {
+    router.push({ path: '/login', query: { redirect: '/' } })
+    return
+  }
+  if (userStore.hasClaimedNewUserCoupon) {
+    showToast({ message: '您已领取过新人优惠券', type: 'fail' })
+    return
+  }
   isClaiming.value = true
   showLoadingToast({ message: '领取中...', forbidClick: true })
   try {
@@ -53,12 +81,52 @@ function goToProductDetail(id: number) {
   router.push(`/product/${id}`)
 }
 
+async function handleAddToCartFromNewUser(e: Event, product: Product) {
+  e.stopPropagation()
+  if (!userStore.isLoggedIn) {
+    router.push({ path: '/login', query: { redirect: `/product/${product.id}` } })
+    return
+  }
+  const specValues: Record<string, string> = {}
+  product.specs.forEach(spec => {
+    specValues[spec.name] = spec.values[0]
+  })
+  showLoadingToast({ message: '加入中...', forbidClick: true })
+  try {
+    await cartStore.addItem(product, specValues, 1)
+    closeToast()
+    showToast({ message: '已加入购物车', type: 'success' })
+  } catch (err) {
+    closeToast()
+    showToast({ message: '加入失败，请重试', type: 'fail' })
+  }
+}
+
 onMounted(async () => {
   try {
     const data = await userStore.getNewUserZoneData()
     newUserZoneData.value = data
   } catch (e) {
     console.error('获取新人专区数据失败', e)
+  }
+  if (userStore.isLoggedIn) {
+    if (!userStore.userInfo) {
+      try {
+        await userStore.getUserInfo()
+      } catch (e) {
+        console.error('获取用户信息失败', e)
+      }
+    }
+    try {
+      await userStore.getCouponList()
+    } catch (e) {
+      console.error('获取优惠券列表失败', e)
+    }
+    try {
+      await cartStore.fetchCart()
+    } catch (e) {
+      console.error('获取购物车数据失败', e)
+    }
   }
 })
 
@@ -168,9 +236,10 @@ const goToCart = () => {
                 type="primary"
                 class="claim-btn"
                 :loading="isClaiming"
+                :disabled="userStore.isLoggedIn && userStore.hasClaimedNewUserCoupon"
                 @click.stop="handleClaimCoupon"
               >
-                {{ userStore.hasClaimedNewUserCoupon ? '已领取' : '立即领取' }}
+                {{ claimButtonText }}
               </van-button>
             </div>
           </div>
@@ -195,9 +264,17 @@ const goToCart = () => {
                     <span class="new-user-card__price">¥{{ item.price.toFixed(1) }}</span>
                     <span class="new-user-card__original">¥{{ item.originalPrice.toFixed(1) }}</span>
                   </div>
-                  <div class="new-user-card__limit">
-                    <van-icon name="info-o" size="10" />
-                    <span>限购1件</span>
+                  <div class="new-user-card__bottom">
+                    <div class="new-user-card__limit">
+                      <van-icon name="info-o" size="10" />
+                      <span>限购1件</span>
+                    </div>
+                    <div
+                      class="new-user-card__add-btn"
+                      @click="handleAddToCartFromNewUser($event, item)"
+                    >
+                      <van-icon name="plus" size="14" color="#fff" />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -600,7 +677,7 @@ const goToCart = () => {
     display: flex;
     align-items: baseline;
     gap: 4px;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
   }
 
   &__price {
@@ -624,12 +701,34 @@ const goToCart = () => {
     }
   }
 
+  &__bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
   &__limit {
     display: flex;
     align-items: center;
     gap: 3px;
     font-size: 10px;
     color: $primary;
+  }
+
+  &__add-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, $primary, $primary-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(45, 184, 123, 0.4);
+    transition: transform 0.2s ease;
+
+    &:active {
+      transform: scale(0.9);
+    }
   }
 }
 

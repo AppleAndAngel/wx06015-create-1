@@ -1,15 +1,17 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
-import { SwipeCell, Checkbox, Stepper, Button } from 'vant'
+import { SwipeCell, Checkbox, Stepper, Button, showToast } from 'vant'
 import AppHeader from '@/components/AppHeader.vue'
 import EmptyState from '@/components/EmptyState.vue'
 import { useCartStore } from '@/stores/cart'
+import { useUserStore } from '@/stores/user'
 import { formatPrice } from '@/utils/format'
 
 const router = useRouter()
 const cartStore = useCartStore()
+const userStore = useUserStore()
 const { items, totalCount, totalAmount, selectedCount } = storeToRefs(cartStore)
 
 const isAllSelected = computed(() => items.value.length > 0 && items.value.every((item) => item.selected))
@@ -32,6 +34,10 @@ function onQuantityChange(id: number, quantity: number) {
 
 function onCheckout() {
   if (selectedCount.value === 0) return
+  if (!userStore.isLoggedIn) {
+    router.push({ path: '/login', query: { redirect: '/checkout' } })
+    return
+  }
   router.push('/checkout')
 }
 
@@ -42,6 +48,16 @@ function goShopping() {
 function specText(specValues: Record<string, string>) {
   return Object.values(specValues).join(' / ')
 }
+
+onMounted(async () => {
+  if (userStore.isLoggedIn) {
+    try {
+      await cartStore.fetchCart()
+    } catch (e) {
+      console.error('获取购物车数据失败', e)
+    }
+  }
+})
 </script>
 
 <template>
