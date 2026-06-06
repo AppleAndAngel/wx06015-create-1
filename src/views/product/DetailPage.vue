@@ -5,14 +5,25 @@ import { getProductById } from '@/mock/products'
 import { useCartStore } from '@/stores/cart'
 import { useCart } from '@/composables/useCart'
 import { useGroupBuyStore } from '@/stores/groupBuy'
+import { useStockpileStore } from '@/stores/stockpile'
 import SpecPopup from '@/components/SpecPopup.vue'
 import AppHeader from '@/components/AppHeader.vue'
-import { showLoadingToast, closeToast, showToast } from 'vant'
+import {
+  showLoadingToast,
+  closeToast,
+  showToast,
+  showConfirmDialog,
+  Popup,
+  Picker,
+  Stepper,
+  Field,
+} from 'vant'
 
 const route = useRoute()
 const router = useRouter()
 const cartStore = useCartStore()
 const groupBuyStore = useGroupBuyStore()
+const stockpileStore = useStockpileStore()
 const { addToCart } = useCart()
 
 const product = computed(() => getProductById(Number(route.params.id)))
@@ -25,9 +36,22 @@ const activeGroup = computed(() => {
   return groupBuyStore.activeOrders.find(o => o.groupBuyProductId === groupBuyProduct.value!.id) || null
 })
 const showSpec = ref(false)
-const specAction = ref<'cart' | 'buy'>('cart')
+const specAction = ref<'cart' | 'buy' | 'stockpile'>('cart')
 const selectedSpecs = ref<Record<string, string>>({})
 const selectedQuantity = ref(1)
+
+const showStockpilePopup = ref(false)
+const stockpileQuantity = ref(1)
+const stockpileCategory = ref('')
+const stockpileNote = ref('')
+const isInStockpile = ref(false)
+
+const stockpileCategoryColumns = computed(() => [
+  stockpileStore.categories.map((cat) => ({
+    text: `${cat.icon} ${cat.name}`,
+    value: cat.id,
+  })),
+])
 
 const specText = computed(() => {
   if (!product.value) return ''
@@ -37,7 +61,7 @@ const specText = computed(() => {
 
 const displayReviews = computed(() => product.value?.reviews?.slice(0, 3) ?? [])
 
-const openSpec = (action: 'cart' | 'buy') => {
+const openSpec = (action: 'cart' | 'buy' | 'stockpile') => {
   specAction.value = action
   showSpec.value = true
 }
@@ -48,13 +72,25 @@ const onSpecConfirm = (specs: Record<string, string>, qty: number) => {
   if (!product.value) return
   if (specAction.value === 'cart') {
     addToCart(product.value, specs, qty)
+  } else if (specAction.value === 'stockpile') {
+    stockpileQuantity.value = qty
+    openStockpilePopup()
   } else {
     router.push('/checkout')
   }
 }
 
-const handleAction = (action: 'cart' | 'buy') => {
+const handleAction = (action: 'cart' | 'buy' | 'stockpile') => {
   if (!product.value) return
+  if (action === 'stockpile') {
+    if (!specText.value) {
+      openSpec('stockpile')
+      return
+    }
+    stockpileQuantity.value = selectedQuantity.value
+    openStockpilePopup()
+    return
+  }
   if (!specText.value) {
     openSpec(action)
     return
@@ -81,14 +117,70 @@ function goJoinGroup() {
   router.push(`/group-detail/${activeGroup.value.id}`)
 }
 
+function openStockpilePopup() {
+  if (!product.value) return
+  stockpileQuantity.value = selectedQuantity.value || 1
+  stockpileCategory.value = stockpileStore.categories[0]?.id || 'food'
+  stockpileNote.value = ''
+  showStockpilePopup.value = true
+}
+
+async function addToStockpile() {
+  if (!product.value) return
+  if (!stockpileCategory.value) {
+    showToast({ message: '请选择分类', type: 'fail' })
+    return
+  }
+  try {
+    showLoadingToast({ message: '添加中...', forbidClick: true })
+    await stockpileStore.addItem(
+      product.value,
+      selectedSpecs.value,
+      stockpileQuantity.value,
+      stockpileCategory.value,
+      stockpileNote.value
+    )
+    await checkStockpileStatus()
+    closeToast()
+    showStockpilePopup.value = false
+    showToast({ message: '已加入囤货清单', type: 'success' })
+  } catch (e: any) {
+    closeToast()
+    showToast({ message: e.message || '添加失败', type: 'fail' })
+  }
+}
+
+async function checkStockpileStatus() {
+  if (!product.value) return
+  try {
+    const exists = await stockpileStore.isInStockpile(product.value.id, selectedSpecs.value)
+    isInStockpile.value = exists
+  } catch (e) {
+    isInStockpile.value = false
+  }
+}
+
+function onCategoryConfirm(value: any) {
+  const selected = value[0]
+  stockpileCategory.value = selected.value
+}
+
+function goToStockpile() {
+  router.push('/stockpile')
+}
+
 onMounted(async () => {
   try {
     await Promise.all([
       groupBuyStore.fetchProducts(),
       groupBuyStore.fetchActiveOrders(),
+      stockpileStore.fetchCategories(),
     ])
   } catch (e) {
-    console.error('[ProductDetail] 加载拼团数据失败', e)
+    console.error('[ProductDetail] 加载数据失败', e)
+  }
+  if (product.value) {
+    await checkStockpileStatus()
   }
 })
 </script>
@@ -172,6 +264,11 @@ onMounted(async () => {
 
     <div class="detail-page__bottom-bar">
       <div class="detail-page__bottom-icons">
+        <div class="detail-page__bottom-icon" @click="goToStockpile">
+          <van-icon :name="isInStockpile ? 'star' : 'star-o'" size="22" :color="isInStockpile ? '#FFB946' : ''" />
+          <van-badge v-if="isInStockpile" dot class="detail-page__stockpile-badge" />
+          <span>囤货</span>
+        </div>
         <div class="detail-page__bottom-icon" @click="router.push('/customer-service')">
           <van-icon name="service-o" size="22" />
           <span>客服</span>
@@ -182,6 +279,9 @@ onMounted(async () => {
           <span>购物车</span>
         </div>
       </div>
+      <van-button class="detail-page__btn detail-page__btn--stockpile" @click="handleAction('stockpile')">
+        {{ isInStockpile ? '已在清单' : '加入囤货' }}
+      </van-button>
       <van-button class="detail-page__btn detail-page__btn--cart" @click="handleAction('cart')">加入购物车</van-button>
       <van-button
         v-if="!groupBuyProduct"
@@ -207,6 +307,63 @@ onMounted(async () => {
       v-model:show="showSpec"
       @confirm="onSpecConfirm"
     />
+
+    <Popup v-model:show="showStockpilePopup" position="bottom" :style="{ height: '65%' }">
+      <div class="stockpile-popup">
+        <div class="stockpile-popup__header">
+          <span class="stockpile-popup__title">加入囤货清单</span>
+          <van-icon name="cross" size="20" @click="showStockpilePopup = false" />
+        </div>
+        <div class="stockpile-popup__content">
+          <div class="stockpile-popup__product">
+            <img v-lazy="product.images[0]" class="stockpile-popup__image" />
+            <div class="stockpile-popup__info">
+              <div class="stockpile-popup__name">{{ product.name }}</div>
+              <div class="stockpile-popup__spec" v-if="specText">{{ specText }}</div>
+              <div class="stockpile-popup__price">¥{{ product.price.toFixed(2) }}</div>
+            </div>
+          </div>
+
+          <div class="stockpile-popup__section">
+            <div class="stockpile-popup__label">购买数量</div>
+            <van-stepper
+              v-model="stockpileQuantity"
+              min="1"
+              max="99"
+              class="stockpile-popup__stepper"
+            />
+          </div>
+
+          <div class="stockpile-popup__section">
+            <div class="stockpile-popup__label">商品分类</div>
+            <van-picker
+              :columns="stockpileCategoryColumns"
+              @change="onCategoryConfirm"
+              class="stockpile-popup__picker"
+              :show-toolbar="false"
+            />
+          </div>
+
+          <div class="stockpile-popup__section">
+            <div class="stockpile-popup__label">备注（选填）</div>
+            <van-field
+              v-model="stockpileNote"
+              type="textarea"
+              placeholder="比如：每周买一次、给孩子买的等"
+              :autosize="{ maxHeight: 80 }"
+              maxlength="50"
+              show-word-limit
+              class="stockpile-popup__note"
+            />
+          </div>
+        </div>
+        <div class="stockpile-popup__footer">
+          <van-button type="primary" block @click="addToStockpile">
+            添加到囤货清单
+          </van-button>
+        </div>
+      </div>
+    </Popup>
   </div>
 </template>
 
@@ -438,12 +595,25 @@ onMounted(async () => {
     right: -8px;
   }
 
+  &__stockpile-badge {
+    position: absolute;
+    top: -2px;
+    right: 6px;
+  }
+
   &__btn {
     flex: 1;
     height: 38px;
     border-radius: 20px;
     font-size: 14px;
     font-weight: 600;
+
+    &--stockpile {
+      background: linear-gradient(135deg, #FFB946, #FF9500) !important;
+      border-color: #FFB946 !important;
+      color: #fff !important;
+      margin-right: 8px;
+    }
 
     &--cart {
       background: $accent !important;
@@ -464,6 +634,113 @@ onMounted(async () => {
       border-color: #FF6B35 !important;
       color: #fff !important;
     }
+  }
+}
+
+.stockpile-popup {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    border-bottom: 1px solid $border;
+  }
+
+  &__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: $text-primary;
+  }
+
+  &__content {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+  }
+
+  &__product {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    background: $bg;
+    border-radius: $radius-md;
+    margin-bottom: 16px;
+  }
+
+  &__image {
+    width: 64px;
+    height: 64px;
+    border-radius: $radius-sm;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  &__info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: 14px;
+    font-weight: 500;
+    color: $text-primary;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__spec {
+    font-size: 12px;
+    color: $text-secondary;
+  }
+
+  &__price {
+    font-size: 16px;
+    font-weight: 600;
+    color: $danger;
+    margin-top: auto;
+  }
+
+  &__section {
+    margin-bottom: 16px;
+  }
+
+  &__label {
+    font-size: 14px;
+    font-weight: 500;
+    color: $text-primary;
+    margin-bottom: 8px;
+  }
+
+  &__stepper {
+    :deep(.van-stepper__input) {
+      width: 40px;
+    }
+  }
+
+  &__picker {
+    background: $bg;
+    border-radius: $radius-md;
+  }
+
+  &__note {
+    :deep(.van-field__control) {
+      background: $bg;
+      border-radius: $radius-sm;
+      padding: 10px 12px;
+    }
+  }
+
+  &__footer {
+    padding: 16px;
+    border-top: 1px solid $border;
   }
 }
 

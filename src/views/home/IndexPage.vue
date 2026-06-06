@@ -187,6 +187,10 @@ const goToGiftCard = () => {
 const goToGroupMeal = () => {
   router.push('/group-meal')
 }
+
+const goToStockpile = () => {
+  router.push('/stockpile')
+}
 </script>
 
 <template>
@@ -349,6 +353,20 @@ const goToGroupMeal = () => {
             </div>
             <div class="group-meal-entry-right">
               <span class="group-meal-entry-btn">去订购</span>
+              <van-icon name="arrow" size="16" color="#fff" />
+            </div>
+          </div>
+        </div>
+
+        <div class="stockpile-entry-section animate-in" @click="goToStockpile">
+          <div class="stockpile-entry-banner">
+            <div class="stockpile-entry-left">
+              <span class="stockpile-entry-tag">家庭囤货</span>
+              <h3 class="stockpile-entry-title">常买好物 一键加购</h3>
+              <p class="stockpile-entry-desc">整理家庭常用清单，批量加入购物车</p>
+            </div>
+            <div class="stockpile-entry-right">
+              <span class="stockpile-entry-btn">去看看</span>
               <van-icon name="arrow" size="16" color="#fff" />
             </div>
           </div>
@@ -1140,6 +1158,68 @@ const goToGroupMeal = () => {
 }
 
 .group-meal-entry-btn {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.stockpile-entry-section {
+  margin: 16px 16px 0;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+  &:active {
+    transform: scale(0.99);
+  }
+}
+
+.stockpile-entry-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #FFB946, #FF9500);
+  border-radius: $radius-md;
+  box-shadow: 0 4px 12px rgba(255, 185, 70, 0.25);
+  color: #fff;
+}
+
+.stockpile-entry-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stockpile-entry-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.stockpile-entry-title {
+  font-size: 18px;
+  font-weight: 700;
+  font-family: $font-display;
+  margin: 2px 0 0;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.stockpile-entry-desc {
+  font-size: 12px;
+  opacity: 0.9;
+  margin: 2px 0 0;
+}
+
+.stockpile-entry-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.stockpile-entry-btn {
   font-size: 13px;
   font-weight: 600;
 }

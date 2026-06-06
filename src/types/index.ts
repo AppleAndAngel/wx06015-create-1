@@ -358,3 +358,30 @@ export interface GroupMealOrderResult {
   orderNo: string
   payAmount: number
 }
+
+export interface StockpileItem {
+  id: number
+  productId: number
+  product: Product
+  specValues: Record<string, string>
+  quantity: number
+  category: string
+  note?: string
+  addedAt: string
+  lastPurchasedAt?: string
+  purchaseCount: number
+}
+
+export interface StockpileCategory {
+  id: string
+  name: string
+  icon: string
+}
+
+export interface AddToStockpileParams {
+  product: Product
+  specValues: Record<string, string>
+  quantity: number
+  category: string
+  note?: string
+}

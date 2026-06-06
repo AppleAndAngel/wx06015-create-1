@@ -26,6 +26,7 @@ import GroupMealListPage from '@/views/group-meal/ListPage.vue'
 import GroupMealCheckoutPage from '@/views/group-meal/CheckoutPage.vue'
 import GroupMealOrderDetailPage from '@/views/group-meal/OrderDetailPage.vue'
 import GroupMealMyOrdersPage from '@/views/group-meal/MyOrdersPage.vue'
+import StockpilePage from '@/views/stockpile/IndexPage.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -153,6 +154,11 @@ const router = createRouter({
     {
       path: '/my-group-meals',
       component: GroupMealMyOrdersPage,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/stockpile',
+      component: StockpilePage,
       meta: { requiresAuth: true },
     },
   ],

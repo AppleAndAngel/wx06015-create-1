@@ -152,6 +152,22 @@ const onLogout = () => {
       </div>
     </div>
 
+    <div class="center-page__stockpile">
+      <div class="center-page__section-head">
+        <span class="center-page__section-title">家庭囤货清单</span>
+        <span class="center-page__section-more" @click="router.push('/stockpile')">查看清单</span>
+      </div>
+      <div class="center-page__stockpile-entry" @click="router.push('/stockpile')">
+        <div class="stockpile-entry-left">
+          <span class="stockpile-entry-icon">📦</span>
+          <span class="stockpile-entry-text">管理常买商品，一键加购</span>
+        </div>
+        <div class="stockpile-entry-right">
+          <van-icon name="arrow" size="14" color="#999" />
+        </div>
+      </div>
+    </div>
+
     <van-cell-group inset class="center-page__menu">
       <van-cell
         title="收货地址"
@@ -401,6 +417,51 @@ const onLogout = () => {
 }
 
 .gift-entry-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.center-page__stockpile {
+  margin: 16px 16px 0;
+  background: $bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow;
+  padding: 16px;
+}
+
+.center-page__stockpile-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: linear-gradient(135deg, #FFF8E8, #FFEFD6);
+  border-radius: $radius-sm;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.center-page__stockpile .stockpile-entry-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.center-page__stockpile .stockpile-entry-icon {
+  font-size: 20px;
+}
+
+.center-page__stockpile .stockpile-entry-text {
+  font-size: 14px;
+  color: $text-primary;
+  font-weight: 500;
+}
+
+.center-page__stockpile .stockpile-entry-right {
   display: flex;
   align-items: center;
   gap: 6px;
