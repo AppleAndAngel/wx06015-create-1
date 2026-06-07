@@ -93,6 +93,60 @@
   }
 }
 
+.stockStatus {
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing-md;
+  padding: $spacing-sm $spacing-md;
+  background: rgba(234, 179, 8, 0.1);
+  border-radius: $radius-sm;
+  
+  &.inStock {
+    background: rgba(34, 197, 94, 0.1);
+  }
+}
+
+.stockIcon {
+  font-size: $font-size-md;
+  margin-right: $spacing-sm;
+}
+
+.stockText {
+  font-size: $font-size-sm;
+  font-weight: 500;
+  color: $color-warning;
+  
+  .inStock & {
+    color: $color-success;
+  }
+}
+
+.restockInfo {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-left: $spacing-sm;
+}
+
+.reminderBtn {
+  @include button-reset;
+  flex: 1.5;
+  height: $button-height-lg;
+  background: $color-warning;
+  color: $color-text-white;
+  font-size: $font-size-md;
+  font-weight: 500;
+  border-radius: $radius-button;
+  @include flex-center;
+  
+  &.active {
+    background: $color-text-tertiary;
+  }
+  
+  &:active {
+    opacity: 0.8;
+  }
+}
+
 .productName {
   font-size: $font-size-xl;
   color: $color-text-primary;

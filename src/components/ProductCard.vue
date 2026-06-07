@@ -4,6 +4,7 @@ import Taro from '@tarojs/taro'
 import { View, Text, Image, Button } from '@tarojs/components'
 import type { Product } from '@/types'
 import { useCompareStore } from '@/stores/compare'
+import { useCartStore } from '@/stores/cart'
 import { formatPrice, renderStars, formatSales } from '@/utils'
 import styles from './ProductCard.module.scss'
 
@@ -16,6 +17,7 @@ const emit = defineEmits<{
 }>()
 
 const compareStore = useCompareStore()
+const cartStore = useCartStore()
 const inCompare = computed(() => compareStore.isInCompare(props.product.id))
 
 const handleClick = () => {
@@ -33,11 +35,23 @@ const handleCompare = (e: Event) => {
 
 const handleAddCart = (e: Event) => {
   e.stopPropagation()
-  // 购物车功能在购物车 store 中实现
-  Taro.showToast({
-    title: '已加入购物车',
-    icon: 'success'
-  })
+  if (!props.product.inStock) {
+    Taro.showToast({
+      title: '商品暂时缺货',
+      icon: 'none'
+    })
+    return
+  }
+  cartStore.addToCart(props.product)
+}
+
+const getDaysUntilRestock = (restockDate?: string) => {
+  if (!restockDate) return null
+  const today = new Date('2026-06-07')
+  const restock = new Date(restockDate)
+  const diffTime = restock.getTime() - today.getTime()
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+  return diffDays
 }
 </script>
 
@@ -46,6 +60,13 @@ const handleAddCart = (e: Event) => {
     <view :class="styles.compareBtn" @click.stop="handleCompare">
       <text :class="[styles.compareIcon, inCompare && styles.active]">
         {{ inCompare ? '✓' : '⚖' }}
+      </text>
+    </view>
+
+    <view v-if="!product.inStock" :class="styles.outOfStockBadge">
+      <text :class="styles.outOfStockText">暂时缺货</text>
+      <text v-if="product.restockDate" :class="styles.outOfStockSubtext">
+        预计{{ getDaysUntilRestock(product.restockDate) }}天后到货
       </text>
     </view>
     

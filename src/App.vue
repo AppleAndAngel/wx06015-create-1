@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { useDidShow, useDidHide } from '@tarojs/taro'
+import { useArrivalStore } from '@/stores/arrival'
 
 useDidShow(() => {
   console.log('[App] 小程序显示')
+  const arrivalStore = useArrivalStore()
+  arrivalStore.checkStockUpdates()
 })
 
 useDidHide(() => {

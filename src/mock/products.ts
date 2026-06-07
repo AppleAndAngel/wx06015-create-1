@@ -32,7 +32,8 @@ export const products: Product[] = [
     reviews: [
       { id: 'r001', userName: '张**', rating: 5, content: '非常新鲜，口感脆甜，水分很足！', date: '2024-01-15' },
       { id: 'r002', userName: '李**', rating: 5, content: '个头均匀，包装很好，下次还会买', date: '2024-01-14' }
-    ]
+    ],
+    inStock: true
   },
   {
     id: 'p002',
@@ -54,7 +55,9 @@ export const products: Product[] = [
     description: '海南金煌芒果，果肉金黄细腻，纤维少，甜度高，香味浓郁，是芒果中的极品。',
     reviews: [
       { id: 'r003', userName: '王**', rating: 5, content: '太好吃了，果肉很厚很甜', date: '2024-01-13' }
-    ]
+    ],
+    inStock: false,
+    restockDate: '2026-06-07'
   },
   {
     id: 'p003',
@@ -76,7 +79,8 @@ export const products: Product[] = [
     description: '智利进口车厘子，果实饱满，色泽紫黑，果肉紧实，甜度高，送礼佳品。',
     reviews: [
       { id: 'r004', userName: '陈**', rating: 5, content: '果粒很大，新鲜度很好，送礼很有面子', date: '2024-01-12' }
-    ]
+    ],
+    inStock: true
   },
   {
     id: 'p004',
@@ -98,7 +102,8 @@ export const products: Product[] = [
     description: '云南高原蓝莓，有机种植，果肉细腻，酸甜适口，富含花青素，护眼佳品。',
     reviews: [
       { id: 'r005', userName: '刘**', rating: 4, content: '味道不错，就是有点小贵', date: '2024-01-11' }
-    ]
+    ],
+    inStock: true
   },
   {
     id: 'p005',
@@ -120,7 +125,8 @@ export const products: Product[] = [
     description: '新疆库尔勒香梨，皮薄肉细，酥脆多汁，清甜爽口，有"西域蜜梨"之美誉。',
     reviews: [
       { id: 'r006', userName: '赵**', rating: 5, content: '皮薄汁多，非常甜，家人都爱吃', date: '2024-01-10' }
-    ]
+    ],
+    inStock: true
   },
   {
     id: 'p006',
@@ -142,7 +148,9 @@ export const products: Product[] = [
     description: '新西兰Zespri佳沛奇异果，维C之王，果肉翠绿，酸甜适中，营养丰富。',
     reviews: [
       { id: 'r007', userName: '孙**', rating: 5, content: '正宗佳沛，品质保证，很好吃', date: '2024-01-09' }
-    ]
+    ],
+    inStock: false,
+    restockDate: '2026-06-15'
   },
   {
     id: 'p007',
@@ -164,7 +172,8 @@ export const products: Product[] = [
     description: '澳洲和牛M9级眼肉，雪花纹理丰富，入口即化，奶香浓郁，是顶级牛肉的代表。',
     reviews: [
       { id: 'r008', userName: '周**', rating: 5, content: '雪花很漂亮，煎出来很香，值得这个价', date: '2024-01-08' }
-    ]
+    ],
+    inStock: true
   },
   {
     id: 'p008',
@@ -186,7 +195,8 @@ export const products: Product[] = [
     description: '散养黑猪五花肉，肥瘦相间，肉质鲜嫩，适合红烧、烤肉、炖煮等多种烹饪方式。',
     reviews: [
       { id: 'r009', userName: '吴**', rating: 5, content: '肉质很新鲜，做红烧肉特别香', date: '2024-01-07' }
-    ]
+    ],
+    inStock: true
   },
   {
     id: 'p009',
@@ -208,7 +218,9 @@ export const products: Product[] = [
     description: '澳洲安格斯牛小排，谷饲200天，大理石花纹丰富，肉质细嫩多汁，适合煎烤。',
     reviews: [
       { id: 'r010', userName: '郑**', rating: 5, content: '原切的，质量很好，煎5分熟刚好', date: '2024-01-06' }
-    ]
+    ],
+    inStock: false,
+    restockDate: '2026-06-12'
   },
   {
     id: 'p010',
@@ -230,7 +242,8 @@ export const products: Product[] = [
     description: '厄瓜多尔进口白虾，肉质紧实鲜美，个头均匀，速冻锁鲜，适合白灼、爆炒、蒜蓉等。',
     reviews: [
       { id: 'r011', userName: '冯**', rating: 5, content: '虾很大很新鲜，肉质紧实，性价比高', date: '2024-01-05' }
-    ]
+    ],
+    inStock: true
   },
   {
     id: 'p011',
@@ -252,7 +265,8 @@ export const products: Product[] = [
     description: '农家散养土鸡蛋，谷物喂养，蛋黄饱满，蛋白浓稠，营养丰富，适合全家食用。',
     reviews: [
       { id: 'r012', userName: '曹**', rating: 5, content: '鸡蛋很新鲜，蛋黄颜色深，味道很好', date: '2024-01-04' }
-    ]
+    ],
+    inStock: true
   },
   {
     id: 'p012',
@@ -274,7 +288,8 @@ export const products: Product[] = [
     description: '有机蔬菜礼盒，包含6种时令有机蔬菜，无农药残留，营养健康，是送礼佳品。',
     reviews: [
       { id: 'r013', userName: '严**', rating: 4, content: '蔬菜很新鲜，种类丰富，包装精美', date: '2024-01-03' }
-    ]
+    ],
+    inStock: true
   }
 ]
 
@@ -285,4 +300,38 @@ export const getProductById = (id: string): Product | undefined => {
 export const getProductsByCategory = (categoryId: string): Product[] => {
   if (categoryId === 'all') return products
   return products.filter(p => p.category === categoryId)
+}
+
+export const updateProductStock = (productId: string, inStock: boolean): void => {
+  const product = products.find(p => p.id === productId)
+  if (product) {
+    product.inStock = inStock
+    if (inStock) {
+      delete product.restockDate
+    }
+    console.log('[Mock] 商品库存更新:', product.name, '库存状态:', inStock)
+  }
+}
+
+export const checkRestockProducts = (): Product[] => {
+  const today = new Date('2026-06-07')
+  const restockedProducts: Product[] = []
+  
+  products.forEach(product => {
+    if (!product.inStock && product.restockDate) {
+      const restockDate = new Date(product.restockDate)
+      if (restockDate <= today) {
+        product.inStock = true
+        delete product.restockDate
+        restockedProducts.push(product)
+        console.log('[Mock] 商品已到货:', product.name)
+      }
+    }
+  })
+  
+  return restockedProducts
+}
+
+export const getOutOfStockProducts = (): Product[] => {
+  return products.filter(p => !p.inStock)
 }

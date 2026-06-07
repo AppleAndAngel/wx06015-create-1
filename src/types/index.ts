@@ -17,6 +17,8 @@ export interface Product {
   tags: string[]
   description: string
   reviews: Review[]
+  inStock: boolean
+  restockDate?: string
 }
 
 export interface Review {
@@ -56,4 +58,19 @@ export interface CartStore {
   toggleSelectAll: (selected: boolean) => void
   getTotalPrice: () => number
   getSelectedCount: () => number
+}
+
+export interface ArrivalReminderItem {
+  product: Product
+  addedAt: number
+  notified: boolean
+}
+
+export interface ArrivalStore {
+  reminderList: ArrivalReminderItem[]
+  addToReminder: (product: Product) => void
+  removeFromReminder: (productId: string) => void
+  isInReminder: (productId: string) => boolean
+  markAsNotified: (productId: string) => void
+  checkStockUpdates: () => Product[]
 }

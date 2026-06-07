@@ -5,9 +5,10 @@ import Taro, { useRouter } from '@tarojs/taro'
 import { getProductById } from '@/mock/products'
 import { useCompareStore } from '@/stores/compare'
 import { useCartStore } from '@/stores/cart'
+import { useArrivalStore } from '@/stores/arrival'
 import { formatPrice, renderStars, formatSales } from '@/utils'
-import EmptyState from '@/components/EmptyState.vue'
-import CompareBar from '@/components/CompareBar.vue'
+import EmptyState from '@/components/EmptyState'
+import CompareBar from '@/components/CompareBar'
 import styles from './index.module.scss'
 
 const router = useRouter()
@@ -16,9 +17,20 @@ const product = ref(getProductById(productId || ''))
 
 const compareStore = useCompareStore()
 const cartStore = useCartStore()
+const arrivalStore = useArrivalStore()
 
 const inCompare = computed(() => product.value ? compareStore.isInCompare(product.value.id) : false)
+const inReminder = computed(() => product.value ? arrivalStore.isInReminder(product.value.id) : false)
 const quantity = ref(1)
+
+const getDaysUntilRestock = (restockDate?: string) => {
+  if (!restockDate) return null
+  const today = new Date('2026-06-07')
+  const restock = new Date(restockDate)
+  const diffTime = restock.getTime() - today.getTime()
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+  return diffDays
+}
 
 const handleAddToCompare = () => {
   if (!product.value) return
@@ -31,7 +43,35 @@ const handleAddToCompare = () => {
 
 const handleAddToCart = () => {
   if (!product.value) return
+  if (!product.value.inStock) {
+    Taro.showToast({
+      title: '商品暂时缺货',
+      icon: 'none'
+    })
+    return
+  }
   cartStore.addToCart(product.value, quantity.value)
+}
+
+const handleToggleReminder = () => {
+  if (!product.value) return
+  if (inReminder.value) {
+    Taro.showModal({
+      title: '取消提醒',
+      content: '确定要取消该商品的到货提醒吗？',
+      success: (res) => {
+        if (res.confirm) {
+          arrivalStore.removeFromReminder(product.value!.id)
+          Taro.showToast({
+            title: '已取消提醒',
+            icon: 'success'
+          })
+        }
+      }
+    })
+  } else {
+    arrivalStore.addToReminder(product.value)
+  }
 }
 
 const handleGoCompare = () => {
@@ -51,6 +91,7 @@ onMounted(() => {
   if (productId) {
     product.value = getProductById(productId)
   }
+  arrivalStore.checkStockUpdates()
 })
 </script>
 
@@ -86,6 +127,18 @@ onMounted(() => {
             </text>
             <text :class="styles.compareText">{{ inCompare ? '已对比' : '对比' }}</text>
           </view>
+        </view>
+
+        <view :class="[styles.stockStatus, product.inStock && styles.inStock]">
+          <text :class="styles.stockIcon">
+            {{ product.inStock ? '✅' : '⏳' }}
+          </text>
+          <text :class="styles.stockText">
+            {{ product.inStock ? '现货，现在下单可立即发货' : '暂时缺货' }}
+          </text>
+          <text v-if="!product.inStock && product.restockDate" :class="styles.restockInfo">
+            预计{{ getDaysUntilRestock(product.restockDate) }}天后到货
+          </text>
         </view>
 
         <text :class="styles.productName">{{ product.name }}</text>
@@ -173,34 +226,60 @@ onMounted(() => {
     </scroll-view>
 
     <view v-if="product" :class="styles.footer">
-      <view :class="styles.quantityControl">
-        <view :class="styles.quantityBtn" @click="handleQuantityChange(-1)">
-          <text>−</text>
+      <template v-if="product.inStock">
+        <view :class="styles.quantityControl">
+          <view :class="styles.quantityBtn" @click="handleQuantityChange(-1)">
+            <text>−</text>
+          </view>
+          <text :class="styles.quantity">{{ quantity }}</text>
+          <view :class="styles.quantityBtn" @click="handleQuantityChange(1)">
+            <text>+</text>
+          </view>
         </view>
-        <text :class="styles.quantity">{{ quantity }}</text>
-        <view :class="styles.quantityBtn" @click="handleQuantityChange(1)">
-          <text>+</text>
-        </view>
-      </view>
 
-      <button
-        v-if="inCompare"
-        :class="styles.secondaryBtn"
-        @click="handleGoCompare"
-      >
-        查看对比
-      </button>
-      <button
-        v-else
-        :class="styles.secondaryBtn"
-        @click="handleAddToCompare"
-      >
-        加入对比
-      </button>
+        <button
+          v-if="inCompare"
+          :class="styles.secondaryBtn"
+          @click="handleGoCompare"
+        >
+          查看对比
+        </button>
+        <button
+          v-else
+          :class="styles.secondaryBtn"
+          @click="handleAddToCompare"
+        >
+          加入对比
+        </button>
 
-      <button :class="styles.primaryBtn" @click="handleAddToCart">
-        加入购物车
-      </button>
+        <button :class="styles.primaryBtn" @click="handleAddToCart">
+          加入购物车
+        </button>
+      </template>
+
+      <template v-else>
+        <button
+          v-if="inCompare"
+          :class="styles.secondaryBtn"
+          @click="handleGoCompare"
+        >
+          查看对比
+        </button>
+        <button
+          v-else
+          :class="styles.secondaryBtn"
+          @click="handleAddToCompare"
+        >
+          加入对比
+        </button>
+
+        <button
+          :class="[styles.reminderBtn, inReminder && styles.active]"
+          @click="handleToggleReminder"
+        >
+          {{ inReminder ? '✓ 已设置提醒' : '🔔 到货提醒我' }}
+        </button>
+      </template>
     </view>
 
     <CompareBar />
