@@ -1,0 +1,144 @@
+@use '@/styles/variables.scss' as *;
+@use '@/styles/theme.scss' as *;
+
+.container {
+  min-height: 100vh;
+  background: linear-gradient(180deg, rgba(34, 197, 94, 0.08) 0%, $color-bg-page 30%);
+  padding-bottom: 200rpx;
+}
+
+.searchBar {
+  padding: $spacing-lg $page-padding;
+  background: transparent;
+}
+
+.searchInput {
+  height: 72rpx;
+  background: #fff;
+  border-radius: $radius-button;
+  padding: 0 $spacing-lg;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  box-shadow: $shadow-card;
+  transition: all $transition-base;
+  &:active {
+    transform: scale(0.99);
+  }
+}
+
+.searchIcon {
+  font-size: $font-size-lg;
+  color: $color-text-tertiary;
+}
+
+.searchText {
+  flex: 1;
+  font-size: $font-size-base;
+  color: $color-text-tertiary;
+}
+
+.bannerSection {
+  padding: 0 $page-padding;
+  margin-bottom: $spacing-lg;
+}
+
+.bannerSwiper {
+  width: 100%;
+  height: 320rpx;
+  border-radius: $radius-md;
+  overflow: hidden;
+}
+
+.bannerItem {
+  width: 100%;
+  height: 100%;
+}
+
+.bannerImage {
+  width: 100%;
+  height: 100%;
+}
+
+.categorySection {
+  padding: 0 $page-padding;
+  margin-bottom: $spacing-lg;
+}
+
+.categoryScroll {
+  @include scroll-x-container;
+  margin: 0 -$page-padding;
+  padding: 0 $page-padding;
+}
+
+.categoryList {
+  display: inline-flex;
+  gap: $spacing-lg;
+  padding-right: $page-padding;
+}
+
+.categoryItem {
+  @include scroll-x-item(120rpx);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.categoryIcon {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: $radius-md;
+  background: $color-primary-bg;
+  @include flex-center;
+  font-size: 48rpx;
+  transition: all $transition-base;
+  &:active {
+    transform: scale(0.95);
+    background: $color-primary;
+  }
+}
+
+.categoryName {
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  white-space: nowrap;
+}
+
+.sectionTitle {
+  padding: $spacing-md $page-padding;
+  @include flex-between;
+}
+
+.titleText {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.moreBtn {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  @include button-reset;
+  &:active {
+    opacity: 0.7;
+  }
+}
+
+.productGrid {
+  padding: 0 $page-padding;
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-md;
+}
+
+.productItem {
+  width: calc(50% - #{$spacing-md} / 2);
+}
+
+.loading {
+  padding: $spacing-xl;
+  text-align: center;
+  color: $color-text-tertiary;
+  font-size: $font-size-sm;
+}

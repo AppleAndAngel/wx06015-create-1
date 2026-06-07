@@ -1,0 +1,256 @@
+@use '@/styles/variables.scss' as *;
+@use '@/styles/theme.scss' as *;
+
+.container {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: 140rpx;
+}
+
+.header {
+  padding: $spacing-md $page-padding;
+  background: $color-bg-card;
+  @include flex-between;
+  border-bottom: 1rpx solid $color-border-light;
+}
+
+.headerTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.headerCount {
+  color: $color-primary;
+  font-weight: $font-weight-bold;
+}
+
+.clearBtn {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  @include button-reset;
+  &:active {
+    opacity: 0.7;
+  }
+}
+
+.productsHeader {
+  background: $color-bg-card;
+  padding: $spacing-md 0;
+  border-bottom: 1rpx solid $color-border-light;
+}
+
+.productsScroll {
+  @include scroll-x-container;
+}
+
+.productsList {
+  display: inline-flex;
+  gap: $spacing-md;
+  padding: 0 $page-padding;
+}
+
+.productCard {
+  @include scroll-x-item(200rpx);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.productRemove {
+  position: absolute;
+  top: -8rpx;
+  right: -8rpx;
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: $radius-round;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 24rpx;
+  @include flex-center;
+  line-height: 1;
+  z-index: 10;
+  @include button-reset;
+  border: none;
+}
+
+.productImage {
+  width: 180rpx;
+  height: 180rpx;
+  border-radius: $radius-sm;
+  background: $color-bg-page;
+}
+
+.productName {
+  width: 100%;
+  margin-top: $spacing-sm;
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+  text-align: center;
+  @include text-ellipsis-multi(2);
+  min-height: 68rpx;
+}
+
+.productPrice {
+  margin-top: $spacing-xs;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-price;
+}
+
+.productPriceSymbol {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+}
+
+.compareTable {
+  margin-top: $spacing-md;
+  background: $color-bg-card;
+}
+
+.tableRow {
+  display: flex;
+  border-bottom: 1rpx solid $color-border-light;
+}
+
+.tableRow:last-child {
+  border-bottom: none;
+}
+
+.rowLabel {
+  width: 160rpx;
+  flex-shrink: 0;
+  padding: $spacing-md;
+  background: $color-bg-page;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  display: flex;
+  align-items: center;
+}
+
+.rowValues {
+  flex: 1;
+  display: flex;
+  overflow-x: auto;
+  @include scroll-x-container;
+}
+
+.valueCell {
+  @include scroll-x-item(200rpx);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-md;
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  text-align: center;
+  min-height: 80rpx;
+  position: relative;
+}
+
+.valueCellBest {
+  background: $color-primary-bg;
+  color: $color-primary-dark;
+  font-weight: $font-weight-medium;
+}
+
+.bestTag {
+  position: absolute;
+  top: 8rpx;
+  left: 8rpx;
+  padding: 2rpx 10rpx;
+  background: $color-primary;
+  color: #fff;
+  font-size: $font-size-xs;
+  border-radius: $radius-xs;
+  line-height: 1.4;
+}
+
+.ratingStars {
+  color: $color-rating;
+  font-size: $font-size-sm;
+}
+
+.tagsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-xs;
+  justify-content: center;
+}
+
+.tagItem {
+  padding: 4rpx 12rpx;
+  background: $color-tag-bg;
+  color: $color-tag-text;
+  font-size: $font-size-xs;
+  border-radius: $radius-xs;
+  white-space: nowrap;
+}
+
+.priceValue {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: $color-price;
+}
+
+.actionBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: $color-bg-card;
+  padding: $spacing-md $page-padding;
+  @include safe-area-bottom;
+  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.06);
+  display: flex;
+  gap: $spacing-md;
+}
+
+.actionBtn {
+  flex: 1;
+  height: $button-height-lg;
+  border-radius: $radius-button;
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  @include button-reset;
+  @include flex-center;
+  transition: all $transition-base;
+  &:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+}
+
+.cartBtn {
+  background: linear-gradient(135deg, $color-secondary 0%, #EA580C 100%);
+  color: #fff;
+}
+
+.detailBtn {
+  background: #fff;
+  color: $color-primary;
+  border: 2rpx solid $color-primary;
+}
+
+.emptyContainer {
+  padding: $spacing-2xl;
+}
+
+.shopBtn {
+  margin-top: $spacing-xl;
+  height: $button-height-lg;
+  padding: 0 $spacing-2xl;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
+  color: #fff;
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  border-radius: $radius-button;
+  @include button-reset;
+  @include flex-center;
+  &:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+}

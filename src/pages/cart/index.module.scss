@@ -1,0 +1,222 @@
+@use '@/styles/variables.scss' as *;
+@use '@/styles/theme.scss' as *;
+
+.container {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: 140rpx;
+}
+
+.cartList {
+  padding: $spacing-md $page-padding;
+}
+
+.cartItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md;
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+}
+
+.checkbox {
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: $radius-round;
+  border: 3rpx solid $color-border;
+  @include flex-center;
+  font-size: 28rpx;
+  transition: all $transition-base;
+}
+
+.checkboxChecked {
+  background: $color-primary;
+  border-color: $color-primary;
+  color: #fff;
+}
+
+.productImage {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: $radius-sm;
+  background: $color-bg-page;
+  flex-shrink: 0;
+}
+
+.productInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.productName {
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  @include text-ellipsis-multi(2);
+  line-height: 1.4;
+}
+
+.productSpec {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  @include text-ellipsis;
+}
+
+.productBottom {
+  @include flex-between;
+  align-items: center;
+  margin-top: $spacing-sm;
+}
+
+.priceWrapper {
+  display: flex;
+  align-items: baseline;
+  gap: 4rpx;
+}
+
+.priceSymbol {
+  font-size: $font-size-sm;
+  color: $color-price;
+  font-weight: $font-weight-medium;
+}
+
+.price {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-price;
+}
+
+.quantityControl {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.qtyBtn {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: $radius-round;
+  background: $color-bg-page;
+  @include flex-center;
+  font-size: $font-size-lg;
+  color: $color-text-primary;
+  @include button-reset;
+  border: none;
+  transition: all $transition-base;
+  &:active {
+    background: $color-border;
+  }
+}
+
+.qtyBtnDisabled {
+  color: $color-text-disabled;
+}
+
+.qtyValue {
+  min-width: 60rpx;
+  text-align: center;
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+}
+
+.bottomBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: $color-bg-card;
+  padding: $spacing-md $page-padding;
+  @include safe-area-bottom;
+  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.06);
+  @include flex-between;
+  align-items: center;
+}
+
+.leftSection {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+}
+
+.selectAll {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
+.selectAllText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.totalSection {
+  flex: 1;
+  text-align: right;
+  padding-right: $spacing-md;
+}
+
+.totalLabel {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.totalPrice {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-price;
+}
+
+.totalSymbol {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+}
+
+.checkoutBtn {
+  height: $button-height-lg;
+  padding: 0 $spacing-xl;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
+  color: #fff;
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  border-radius: $radius-button;
+  @include button-reset;
+  @include flex-center;
+  white-space: nowrap;
+  transition: all $transition-base;
+  &:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+  &:disabled {
+    background: $color-border;
+    color: $color-text-tertiary;
+  }
+}
+
+.emptyContainer {
+  padding-top: $spacing-2xl;
+}
+
+.goShopBtn {
+  margin-top: $spacing-xl;
+  height: $button-height-lg;
+  padding: 0 $spacing-2xl;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
+  color: #fff;
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  border-radius: $radius-button;
+  @include button-reset;
+  @include flex-center;
+  &:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+}
