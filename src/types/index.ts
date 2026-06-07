@@ -74,3 +74,33 @@ export interface ArrivalStore {
   markAsNotified: (productId: string) => void
   checkStockUpdates: () => Product[]
 }
+
+export interface ComboProduct {
+  productId: string
+  quantity: number
+  product?: Product
+}
+
+export interface Combo {
+  id: string
+  name: string
+  description: string
+  scene: string
+  icon: string
+  image: string
+  originalPrice: number
+  comboPrice: number
+  savedAmount: number
+  sales: number
+  rating: number
+  tags: string[]
+  products: ComboProduct[]
+  inStock: boolean
+}
+
+export interface ComboScene {
+  id: string
+  name: string
+  icon: string
+  description: string
+}

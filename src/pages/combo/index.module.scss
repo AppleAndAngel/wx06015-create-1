@@ -1,0 +1,351 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: $color-bg-page;
+}
+
+.header {
+  padding: $spacing-md $spacing-lg;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  @include flex-between;
+}
+
+.headerTitle {
+  font-size: $font-size-xl;
+  font-weight: 600;
+  color: $color-text-white;
+}
+
+.headerDesc {
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.9);
+  margin-top: $spacing-xs;
+}
+
+.sceneTabs {
+  @include scroll-x-container;
+  padding: $spacing-md $spacing-lg;
+  background: $color-bg-card;
+  border-bottom: 1rpx solid $color-border-light;
+}
+
+.sceneTab {
+  @include scroll-x-item(160rpx);
+  @include flex-center;
+  flex-direction: column;
+  padding: $spacing-md $spacing-sm;
+  border-radius: $radius-lg;
+  background: $color-bg-page;
+  transition: all $transition-fast;
+
+  &.active {
+    background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  }
+}
+
+.sceneIcon {
+  font-size: 48rpx;
+  margin-bottom: $spacing-xs;
+}
+
+.sceneName {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+
+  .active & {
+    color: $color-text-white;
+    font-weight: 500;
+  }
+}
+
+.scrollView {
+  flex: 1;
+  overflow: hidden;
+}
+
+.comboList {
+  padding: $spacing-lg;
+}
+
+.comboCard {
+  @include card-base;
+  margin-bottom: $spacing-lg;
+  overflow: hidden;
+  transition: all $transition-fast;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.comboHeader {
+  position: relative;
+  margin: (-$spacing-lg) (-$spacing-lg) $spacing-lg;
+}
+
+.comboImage {
+  width: 100%;
+  height: 320rpx;
+}
+
+.comboBadge {
+  position: absolute;
+  top: $spacing-md;
+  left: $spacing-md;
+  @include flex-center;
+  flex-direction: column;
+  padding: $spacing-sm $spacing-md;
+  background: linear-gradient(135deg, $color-price 0%, $color-price-light 100%);
+  border-radius: $radius-lg;
+}
+
+.badgeIcon {
+  font-size: $font-size-base;
+  font-weight: 600;
+  color: $color-text-white;
+}
+
+.badgeText {
+  font-size: $font-size-xs;
+  color: $color-text-white;
+  opacity: 0.9;
+}
+
+.outOfStockBadge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  @include flex-center;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.outOfStockText {
+  font-size: $font-size-lg;
+  font-weight: 600;
+  color: $color-text-white;
+}
+
+.comboContent {
+  margin-top: $spacing-md;
+}
+
+.comboTitle {
+  @include flex-between;
+  align-items: flex-start;
+  margin-bottom: $spacing-sm;
+}
+
+.comboName {
+  flex: 1;
+  font-size: $font-size-lg;
+  font-weight: 600;
+  color: $color-text-primary;
+  @include text-ellipsis;
+}
+
+.comboIcon {
+  font-size: 40rpx;
+  margin-left: $spacing-sm;
+}
+
+.comboDesc {
+  font-size: $font-size-base;
+  color: $color-text-secondary;
+  line-height: 1.5;
+  margin-bottom: $spacing-md;
+  @include text-ellipsis-multi(2);
+}
+
+.comboTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-md;
+}
+
+.comboTag {
+  @include tag-base;
+  background: $color-tag-bg;
+  color: $color-tag-text;
+}
+
+.comboMeta {
+  @include flex-between;
+  margin-bottom: $spacing-md;
+  padding-top: $spacing-md;
+  border-top: 1rpx solid $color-border-light;
+}
+
+.metaItem {
+  @include flex-start;
+  gap: $spacing-xs;
+}
+
+.metaIcon {
+  font-size: $font-size-base;
+}
+
+.metaText {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.comboProducts {
+  margin-bottom: $spacing-md;
+  padding: $spacing-md;
+  background: $color-bg-page;
+  border-radius: $radius-md;
+}
+
+.productsTitle {
+  font-size: $font-size-base;
+  font-weight: 500;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+}
+
+.productList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+}
+
+.productItem {
+  display: inline-flex;
+  align-items: center;
+  padding: $spacing-xs $spacing-sm;
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  border: 1rpx solid $color-border-light;
+}
+
+.productImage {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: $radius-sm;
+  margin-right: $spacing-xs;
+}
+
+.productName {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  @include text-ellipsis;
+  max-width: 120rpx;
+}
+
+.productQty {
+  font-size: $font-size-xs;
+  color: $color-primary;
+  margin-left: $spacing-xs;
+}
+
+.comboFooter {
+  @include flex-between;
+  align-items: flex-end;
+}
+
+.priceSection {
+  @include flex-start;
+  align-items: flex-end;
+  gap: $spacing-sm;
+}
+
+.priceLabel {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.comboPrice {
+  font-size: $font-size-xl;
+  font-weight: 700;
+  color: $color-price;
+}
+
+.comboPriceSymbol {
+  font-size: $font-size-base;
+  font-weight: 600;
+  color: $color-price;
+}
+
+.originalPrice {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  text-decoration: line-through;
+}
+
+.savedBadge {
+  @include flex-center;
+  padding: $spacing-xs $spacing-sm;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: $radius-sm;
+  margin-left: $spacing-sm;
+}
+
+.savedText {
+  font-size: $font-size-xs;
+  color: $color-price;
+  font-weight: 500;
+}
+
+.addAction {
+  @include flex-center;
+  gap: $spacing-sm;
+}
+
+.addBtn {
+  @include button-reset;
+  height: $button-height-md;
+  min-width: 200rpx;
+  padding: 0 $spacing-lg;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  border-radius: $radius-button;
+  font-size: $font-size-base;
+  font-weight: 500;
+  color: $color-text-white;
+  white-space: nowrap;
+  transition: all $transition-fast;
+
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+
+  &.disabled {
+    background: $color-text-placeholder;
+  }
+}
+
+.emptyState {
+  padding: $spacing-xxl 0;
+  @include flex-center;
+  flex-direction: column;
+}
+
+.emptyIcon {
+  font-size: 120rpx;
+  margin-bottom: $spacing-md;
+}
+
+.emptyText {
+  font-size: $font-size-base;
+  color: $color-text-tertiary;
+}
+
+.footer {
+  padding: $spacing-xl 0 $spacing-xxl;
+  @include flex-center;
+}
+
+.footerText {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}

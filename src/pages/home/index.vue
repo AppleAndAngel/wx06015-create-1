@@ -42,6 +42,13 @@ const handleSearch = () => {
   })
 }
 
+const handleComboClick = () => {
+  console.log('[Home] 点击搭配套餐')
+  Taro.navigateTo({
+    url: '/pages/combo/index'
+  })
+}
+
 useDidShow(() => {
   console.log('[Home] 页面显示')
   if (productList.value.length === 0) {
@@ -98,7 +105,14 @@ onMounted(() => {
         <text :class="styles.sectionTitle">精选分类</text>
         <view :class="styles.categoryGrid">
           <view
-            v-for="category in categories.slice(1, 7)"
+            :class="styles.categoryItem"
+            @click="handleComboClick"
+          >
+            <text :class="styles.categoryIcon">🍽️</text>
+            <text :class="styles.categoryName">搭配套餐</text>
+          </view>
+          <view
+            v-for="category in categories.slice(1, 6)"
             :key="category.id"
             :class="styles.categoryItem"
             @click="handleCategoryClick(category.id)"

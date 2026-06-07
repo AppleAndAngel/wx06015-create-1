@@ -1,4 +1,4 @@
-import type { Product, Category } from '@/types'
+import type { Product, Category, Combo, ComboScene } from '@/types'
 
 export const categories: Category[] = [
   { id: 'all', name: '全部', icon: '📦' },
@@ -334,4 +334,242 @@ export const checkRestockProducts = (): Product[] => {
 
 export const getOutOfStockProducts = (): Product[] => {
   return products.filter(p => !p.inStock)
+}
+
+export const comboScenes: ComboScene[] = [
+  { id: 'all', name: '全部', icon: '🍽️', description: '精选所有套餐' },
+  { id: 'hotpot', name: '火锅', icon: '🍲', description: '冬日暖心火锅套餐' },
+  { id: 'bbq', name: '烧烤', icon: '🍢', description: '户外烧烤必备食材' },
+  { id: 'breakfast', name: '早餐', icon: '🍳', description: '营养早餐健康搭配' },
+  { id: 'family', name: '家宴', icon: '👨‍👩‍👧‍👦', description: '家庭聚餐精选组合' },
+  { id: 'quick', name: '快手菜', icon: '🥗', description: '15分钟搞定一餐' }
+]
+
+export const combos: Combo[] = [
+  {
+    id: 'c001',
+    name: '麻辣鲜香火锅套餐',
+    description: '经典麻辣火锅食材组合，含肉类、蔬菜、海鲜，3-4人份',
+    scene: 'hotpot',
+    icon: '🌶️',
+    image: 'https://picsum.photos/id/292/750/500',
+    originalPrice: 298.0,
+    comboPrice: 238.0,
+    savedAmount: 60.0,
+    sales: 8920,
+    rating: 4.9,
+    tags: ['热销', '3-4人份', '含锅底'],
+    products: [
+      { productId: 'p007', quantity: 1 },
+      { productId: 'p008', quantity: 2 },
+      { productId: 'p010', quantity: 1 },
+      { productId: 'p012', quantity: 1 }
+    ],
+    inStock: true
+  },
+  {
+    id: 'c002',
+    name: '清汤养生火锅套餐',
+    description: '菌菇汤底+精选食材，健康养生，适合老人小孩',
+    scene: 'hotpot',
+    icon: '🍄',
+    image: 'https://picsum.photos/id/312/750/500',
+    originalPrice: 268.0,
+    comboPrice: 208.0,
+    savedAmount: 60.0,
+    sales: 6780,
+    rating: 4.8,
+    tags: ['养生', '不辣', '菌菇汤底'],
+    products: [
+      { productId: 'p008', quantity: 2 },
+      { productId: 'p009', quantity: 1 },
+      { productId: 'p012', quantity: 1 },
+      { productId: 'p011', quantity: 1 }
+    ],
+    inStock: true
+  },
+  {
+    id: 'c003',
+    name: '家庭烧烤套餐',
+    description: '精选牛羊肉串+海鲜+蔬菜，5-6人户外烧烤必备',
+    scene: 'bbq',
+    icon: '🔥',
+    image: 'https://picsum.photos/id/326/750/500',
+    originalPrice: 388.0,
+    comboPrice: 298.0,
+    savedAmount: 90.0,
+    sales: 5670,
+    rating: 4.9,
+    tags: ['热销', '5-6人份', '含调料'],
+    products: [
+      { productId: 'p007', quantity: 2 },
+      { productId: 'p008', quantity: 3 },
+      { productId: 'p010', quantity: 2 },
+      { productId: 'p012', quantity: 1 }
+    ],
+    inStock: true
+  },
+  {
+    id: 'c004',
+    name: '双人浪漫烧烤套餐',
+    description: '精选安格斯牛肉+海鲜，情侣约会首选',
+    scene: 'bbq',
+    icon: '💕',
+    image: 'https://picsum.photos/id/431/750/500',
+    originalPrice: 258.0,
+    comboPrice: 198.0,
+    savedAmount: 60.0,
+    sales: 4560,
+    rating: 4.8,
+    tags: ['双人餐', '浪漫', '高品质'],
+    products: [
+      { productId: 'p009', quantity: 1 },
+      { productId: 'p010', quantity: 1 },
+      { productId: 'p012', quantity: 1 }
+    ],
+    inStock: true
+  },
+  {
+    id: 'c005',
+    name: '营养早餐套餐',
+    description: '鸡蛋+水果+奶制品，一周营养不重样',
+    scene: 'breakfast',
+    icon: '🌅',
+    image: 'https://picsum.photos/id/570/750/500',
+    originalPrice: 168.0,
+    comboPrice: 128.0,
+    savedAmount: 40.0,
+    sales: 12340,
+    rating: 4.9,
+    tags: ['热销', '一周量', '营养均衡'],
+    products: [
+      { productId: 'p001', quantity: 1 },
+      { productId: 'p004', quantity: 1 },
+      { productId: 'p011', quantity: 2 }
+    ],
+    inStock: true
+  },
+  {
+    id: 'c006',
+    name: '轻食早餐套餐',
+    description: '低卡高纤，健康减脂人士首选',
+    scene: 'breakfast',
+    icon: '🥑',
+    image: 'https://picsum.photos/id/580/750/500',
+    originalPrice: 158.0,
+    comboPrice: 118.0,
+    savedAmount: 40.0,
+    sales: 7890,
+    rating: 4.7,
+    tags: ['低卡', '减脂', '高纤'],
+    products: [
+      { productId: 'p005', quantity: 1 },
+      { productId: 'p004', quantity: 1 },
+      { productId: 'p011', quantity: 1 },
+      { productId: 'p012', quantity: 1 }
+    ],
+    inStock: true
+  },
+  {
+    id: 'c007',
+    name: '节日家宴套餐',
+    description: '8-10人份，精选高端食材，节日团聚首选',
+    scene: 'family',
+    icon: '🎉',
+    image: 'https://picsum.photos/id/625/750/500',
+    originalPrice: 888.0,
+    comboPrice: 688.0,
+    savedAmount: 200.0,
+    sales: 3450,
+    rating: 4.9,
+    tags: ['高端', '8-10人份', '送礼佳品'],
+    products: [
+      { productId: 'p003', quantity: 1 },
+      { productId: 'p007', quantity: 2 },
+      { productId: 'p009', quantity: 2 },
+      { productId: 'p010', quantity: 2 },
+      { productId: 'p012', quantity: 2 }
+    ],
+    inStock: true
+  },
+  {
+    id: 'c008',
+    name: '周末小聚套餐',
+    description: '4-6人份，好友聚会轻松搞定',
+    scene: 'family',
+    icon: '🎊',
+    image: 'https://picsum.photos/id/835/750/500',
+    originalPrice: 458.0,
+    comboPrice: 358.0,
+    savedAmount: 100.0,
+    sales: 4560,
+    rating: 4.8,
+    tags: ['4-6人份', '聚会', '省心'],
+    products: [
+      { productId: 'p006', quantity: 1 },
+      { productId: 'p007', quantity: 1 },
+      { productId: 'p008', quantity: 2 },
+      { productId: 'p010', quantity: 1 },
+      { productId: 'p012', quantity: 1 }
+    ],
+    inStock: false
+  },
+  {
+    id: 'c009',
+    name: '15分钟快手晚餐',
+    description: '精选易做食材，下班回家快速搞定一餐',
+    scene: 'quick',
+    icon: '⚡',
+    image: 'https://picsum.photos/id/1080/750/500',
+    originalPrice: 128.0,
+    comboPrice: 98.0,
+    savedAmount: 30.0,
+    sales: 9870,
+    rating: 4.8,
+    tags: ['快手', '省时', '2人份'],
+    products: [
+      { productId: 'p008', quantity: 1 },
+      { productId: 'p010', quantity: 1 },
+      { productId: 'p012', quantity: 1 }
+    ],
+    inStock: true
+  },
+  {
+    id: 'c010',
+    name: '懒人火锅套餐',
+    description: '开袋即煮，无需复杂处理，懒人福音',
+    scene: 'quick',
+    icon: '🍜',
+    image: 'https://picsum.photos/id/1074/750/500',
+    originalPrice: 158.0,
+    comboPrice: 118.0,
+    savedAmount: 40.0,
+    sales: 8760,
+    rating: 4.7,
+    tags: ['懒人必备', '免处理', '1人食'],
+    products: [
+      { productId: 'p008', quantity: 1 },
+      { productId: 'p010', quantity: 1 },
+      { productId: 'p011', quantity: 1 }
+    ],
+    inStock: true
+  }
+]
+
+export const getCombosByScene = (sceneId: string): Combo[] => {
+  if (sceneId === 'all') return combos
+  return combos.filter(c => c.scene === sceneId)
+}
+
+export const getComboById = (id: string): Combo | undefined => {
+  return combos.find(c => c.id === id)
+}
+
+export const getComboProducts = (combo: Combo): (ComboProduct & { product: Product })[] => {
+  return combo.products
+    .map(cp => ({
+      ...cp,
+      product: getProductById(cp.productId)!
+    }))
+    .filter(cp => cp.product)
 }

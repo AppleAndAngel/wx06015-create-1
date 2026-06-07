@@ -9,7 +9,8 @@ export default defineAppConfig({
     'pages/search/index',
     'pages/order/index',
     'pages/favorite/index',
-    'pages/arrival/index'
+    'pages/arrival/index',
+    'pages/combo/index'
   ],
   window: {
     backgroundTextStyle: 'light',
