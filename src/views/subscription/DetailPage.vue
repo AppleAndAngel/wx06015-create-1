@@ -171,8 +171,14 @@ function handleAddressSelect(addressId: number) {
   showAddressPopup.value = false
 }
 
-function handleDateConfirm(value: any) {
-  customStartDate.value = dayjs(value).format('YYYY-MM-DD')
+function openDatePicker() {
+  const dateStr = customStartDate.value || estimatedFirstDelivery.value
+  datePickerValue.value = dateStr.split('-')
+  showDatePicker.value = true
+}
+
+function handleDateConfirm(value: string[]) {
+  customStartDate.value = value.join('-')
   showDatePicker.value = false
 }
 
@@ -347,7 +353,7 @@ watch(
           <van-icon name="arrow" size="14" color="#999" />
         </div>
 
-        <div class="form-row" @click="showDatePicker = true">
+        <div class="form-row" @click="openDatePicker">
           <span class="form-row__label">首次配送</span>
           <span class="form-row__value form-row__value--highlight">
             {{ formatDate(estimatedFirstDelivery) }}

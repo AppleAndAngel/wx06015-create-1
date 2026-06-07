@@ -9,6 +9,7 @@ import {
 } from 'vant'
 import { useSubscriptionStore } from '@/stores/subscription'
 import { useAddressStore } from '@/stores/address'
+import { useUserStore } from '@/stores/user'
 import AppHeader from '@/components/AppHeader.vue'
 import type { SubscriptionCycle, Weekday, UpdateSubscriptionParams } from '@/types'
 import dayjs from 'dayjs'
@@ -17,6 +18,7 @@ const route = useRoute()
 const router = useRouter()
 const subscriptionStore = useSubscriptionStore()
 const addressStore = useAddressStore()
+const userStore = useUserStore()
 
 const subscriptionId = computed(() => Number(route.params.id))
 const subscription = computed(() => subscriptionStore.currentSubscription)
@@ -135,8 +137,14 @@ function handleAddressSelect(addressId: number) {
   showAddressPopup.value = false
 }
 
-function handleDateConfirm(value: any) {
-  customNextDate.value = dayjs(value).format('YYYY-MM-DD')
+function openDatePicker() {
+  const dateStr = customNextDate.value || nextDeliveryDate.value
+  datePickerValue.value = dateStr.split('-')
+  showDatePicker.value = true
+}
+
+function handleDateConfirm(value: string[]) {
+  customNextDate.value = value.join('-')
   showDatePicker.value = false
 }
 
@@ -281,17 +289,24 @@ async function loadData() {
 }
 
 onMounted(() => {
+  if (!userStore.isLoggedIn) {
+    router.push({
+      path: '/login',
+      query: { redirect: `/subscription/edit/${subscriptionId.value}` }
+    })
+    return
+  }
   loadData()
 })
 </script>
 
 <template>
-  <div class="subscription-edit-page" v-if="subscription">
+  <div class="subscription-edit-page">
     <AppHeader title="编辑订阅" :show-back="true" @click-left="goBack" />
 
     <van-loading v-if="loading" class="loading" />
 
-    <template v-else>
+    <template v-else-if="subscription">
       <div class="page-body">
         <div class="product-info">
           <img
@@ -372,7 +387,7 @@ onMounted(() => {
             <van-icon name="arrow" size="14" color="#999" />
           </div>
 
-          <div class="form-row" @click="showDatePicker = true">
+          <div class="form-row" @click="openDatePicker">
             <span class="form-row__label">下次配送</span>
             <span class="form-row__value form-row__value--highlight">
               {{ formatDate(nextDeliveryDate) }}
@@ -581,6 +596,9 @@ onMounted(() => {
         @cancel="showDatePicker = false"
       />
     </van-popup>
+    </template>
+
+    <van-empty v-else description="订阅不存在或已失效" />
   </div>
 </template>
 
