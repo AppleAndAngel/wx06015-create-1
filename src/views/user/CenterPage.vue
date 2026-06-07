@@ -5,6 +5,7 @@ import { useUserStore } from '@/stores/user'
 import { useCartStore } from '@/stores/cart'
 import { useOrderStore } from '@/stores/order'
 import { useGroupBuyStore } from '@/stores/groupBuy'
+import { useSubscriptionStore } from '@/stores/subscription'
 import { onMounted, computed } from 'vue'
 
 const router = useRouter()
@@ -12,17 +13,23 @@ const userStore = useUserStore()
 const cartStore = useCartStore()
 const orderStore = useOrderStore()
 const groupBuyStore = useGroupBuyStore()
+const subscriptionStore = useSubscriptionStore()
 
 const userInfo = userStore.userInfo
+
+const activeSubscriptionCount = computed(() => subscriptionStore.activeSubscriptions.length)
 
 const pendingGroupCount = computed(() => groupBuyStore.pendingMyOrders.length)
 
 onMounted(async () => {
   if (userStore.isLoggedIn) {
     try {
-      await groupBuyStore.fetchMyOrders()
+      await Promise.all([
+        groupBuyStore.fetchMyOrders(),
+        subscriptionStore.fetchMySubscriptions(),
+      ])
     } catch (e) {
-      console.error('[Center] 加载拼团数据失败', e)
+      console.error('[Center] 加载数据失败', e)
     }
   }
 })
@@ -163,6 +170,23 @@ const onLogout = () => {
           <span class="stockpile-entry-text">管理常买商品，一键加购</span>
         </div>
         <div class="stockpile-entry-right">
+          <van-icon name="arrow" size="14" color="#999" />
+        </div>
+      </div>
+    </div>
+
+    <div class="center-page__subscription">
+      <div class="center-page__section-head">
+        <span class="center-page__section-title">订阅到家</span>
+        <span class="center-page__section-more" @click="router.push('/my-subscriptions')">管理订阅</span>
+      </div>
+      <div class="center-page__subscription-entry" @click="router.push('/my-subscriptions')">
+        <div class="subscription-entry-left">
+          <span class="subscription-entry-icon">🔔</span>
+          <span class="subscription-entry-text">管理周期配送，灵活调整计划</span>
+        </div>
+        <div class="subscription-entry-right">
+          <van-tag v-if="activeSubscriptionCount > 0" type="success" round>{{ activeSubscriptionCount }}个进行中</van-tag>
           <van-icon name="arrow" size="14" color="#999" />
         </div>
       </div>
@@ -462,6 +486,51 @@ const onLogout = () => {
 }
 
 .center-page__stockpile .stockpile-entry-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.center-page__subscription {
+  margin: 16px 16px 0;
+  background: $bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow;
+  padding: 16px;
+}
+
+.center-page__subscription-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: linear-gradient(135deg, #E8F8F7, #D4F0EE);
+  border-radius: $radius-sm;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.center-page__subscription .subscription-entry-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.center-page__subscription .subscription-entry-icon {
+  font-size: 20px;
+}
+
+.center-page__subscription .subscription-entry-text {
+  font-size: 14px;
+  color: $text-primary;
+  font-weight: 500;
+}
+
+.center-page__subscription .subscription-entry-right {
   display: flex;
   align-items: center;
   gap: 6px;

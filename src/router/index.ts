@@ -32,6 +32,10 @@ import RecipeDetailPage from '@/views/recipe-detail/IndexPage.vue'
 import PickupStoreListPage from '@/views/pickup/StoreListPage.vue'
 import PickupTimeSlotPage from '@/views/pickup/TimeSlotPage.vue'
 import PickupCodePage from '@/views/pickup/PickupCodePage.vue'
+import SubscriptionIndexPage from '@/views/subscription/IndexPage.vue'
+import SubscriptionDetailPage from '@/views/subscription/DetailPage.vue'
+import MySubscriptionsPage from '@/views/subscription/MySubscriptionsPage.vue'
+import SubscriptionEditPage from '@/views/subscription/EditPage.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -187,6 +191,24 @@ const router = createRouter({
     {
       path: '/pickup/code/:orderId',
       component: PickupCodePage,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/subscription',
+      component: SubscriptionIndexPage,
+    },
+    {
+      path: '/subscription/:id',
+      component: SubscriptionDetailPage,
+    },
+    {
+      path: '/my-subscriptions',
+      component: MySubscriptionsPage,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/subscription/edit/:id',
+      component: SubscriptionEditPage,
       meta: { requiresAuth: true },
     },
   ],

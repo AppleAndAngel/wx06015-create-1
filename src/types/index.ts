@@ -489,3 +489,82 @@ export interface Order {
   createdAt: string
   paidAt?: string
 }
+
+export type SubscriptionCycle = 'daily' | 'weekly' | 'biweekly' | 'monthly'
+export type SubscriptionStatus = 'active' | 'paused' | 'cancelled' | 'expired'
+export type Weekday = 0 | 1 | 2 | 3 | 4 | 5 | 6
+
+export interface SubscriptionProduct {
+  id: number
+  productId: number
+  product: Product
+  subscribePrice: number
+  originalPrice: number
+  discount: string
+  description: string
+  availableCycles: SubscriptionCycle[]
+  defaultCycle: SubscriptionCycle
+  minQuantity: number
+  maxQuantity: number
+  tags: string[]
+  totalSubscribers: number
+}
+
+export interface SubscriptionDeliveryRecord {
+  id: number
+  deliveryDate: string
+  status: 'pending' | 'delivering' | 'delivered' | 'skipped' | 'failed'
+  actualDeliveryDate?: string
+  orderId?: number
+  quantity?: number
+  note?: string
+}
+
+export interface Subscription {
+  id: number
+  subscriptionProductId: number
+  product: Product
+  subscribePrice: number
+  originalPrice: number
+  specValues: Record<string, string>
+  quantity: number
+  cycle: SubscriptionCycle
+  weekdays: Weekday[]
+  startTime: string
+  nextDeliveryDate: string
+  endTime?: string
+  status: SubscriptionStatus
+  address: Address
+  totalDeliveries: number
+  completedDeliveries: number
+  totalSaved: number
+  deliveryRecords: SubscriptionDeliveryRecord[]
+  createdAt: string
+  pausedReason?: string
+  pausedUntil?: string
+}
+
+export interface CreateSubscriptionParams {
+  subscriptionProductId: number
+  specValues: Record<string, string>
+  quantity: number
+  cycle: SubscriptionCycle
+  weekdays: Weekday[]
+  startTime: string
+  addressId: number
+}
+
+export interface UpdateSubscriptionParams {
+  id?: number
+  quantity?: number
+  cycle?: SubscriptionCycle
+  weekdays?: Weekday[]
+  nextDeliveryDate?: string
+  addressId?: number
+}
+
+export interface SubscriptionCategory {
+  id: string
+  name: string
+  icon: string
+}

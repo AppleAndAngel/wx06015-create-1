@@ -195,6 +195,10 @@ const goToStockpile = () => {
 const goToSeasonalRecipe = () => {
   router.push('/seasonal-recipe')
 }
+
+const goToSubscription = () => {
+  router.push('/subscription')
+}
 </script>
 
 <template>
@@ -385,6 +389,20 @@ const goToSeasonalRecipe = () => {
             </div>
             <div class="seasonal-recipe-entry-right">
               <span class="seasonal-recipe-entry-btn">去看看</span>
+              <van-icon name="arrow" size="16" color="#fff" />
+            </div>
+          </div>
+        </div>
+
+        <div class="subscription-entry-section animate-in" @click="goToSubscription">
+          <div class="subscription-entry-banner">
+            <div class="subscription-entry-left">
+              <span class="subscription-entry-tag">订阅到家</span>
+              <h3 class="subscription-entry-title">周期配送 省心又省钱</h3>
+              <p class="subscription-entry-desc">牛奶水果等日常消耗品，定时配送上门</p>
+            </div>
+            <div class="subscription-entry-right">
+              <span class="subscription-entry-btn">去订阅</span>
               <van-icon name="arrow" size="16" color="#fff" />
             </div>
           </div>
@@ -1300,6 +1318,68 @@ const goToSeasonalRecipe = () => {
 }
 
 .seasonal-recipe-entry-btn {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.subscription-entry-section {
+  margin: 16px 16px 0;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+  &:active {
+    transform: scale(0.99);
+  }
+}
+
+.subscription-entry-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #4ECDC4, #44A08D);
+  border-radius: $radius-md;
+  box-shadow: 0 4px 12px rgba(78, 205, 196, 0.25);
+  color: #fff;
+}
+
+.subscription-entry-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.subscription-entry-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.subscription-entry-title {
+  font-size: 18px;
+  font-weight: 700;
+  font-family: $font-display;
+  margin: 2px 0 0;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.subscription-entry-desc {
+  font-size: 12px;
+  opacity: 0.9;
+  margin: 2px 0 0;
+}
+
+.subscription-entry-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.subscription-entry-btn {
   font-size: 13px;
   font-weight: 600;
 }
