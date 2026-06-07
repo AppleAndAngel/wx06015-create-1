@@ -1,31 +1,48 @@
 @use '@/styles/variables.scss' as *;
-@use '@/styles/theme.scss' as *;
 
 .container {
   min-height: 100vh;
   background: $color-bg-page;
 }
 
-.content {
-  padding: $spacing-2xl $page-padding;
-  text-align: center;
+.tabs {
+  @include flex-row;
+  background: $color-bg-card;
+  padding: 0 $spacing-sm;
+  border-bottom: 1rpx solid $color-border-light;
 }
 
-.icon {
-  font-size: 120rpx;
-  margin-bottom: $spacing-lg;
-  opacity: 0.5;
+.tabItem {
+  flex: 1;
+  padding: $spacing-md 0;
+  @include flex-center;
+  position: relative;
+
+  &.active {
+    .tabText {
+      color: $color-primary;
+      font-weight: 600;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 48rpx;
+      height: 4rpx;
+      background: $color-primary;
+      border-radius: 2rpx;
+    }
+  }
 }
 
-.title {
-  font-size: $font-size-xl;
-  font-weight: $font-weight-semibold;
-  color: $color-text-primary;
-  margin-bottom: $spacing-md;
-}
-
-.desc {
-  font-size: $font-size-base;
+.tabText {
+  font-size: $font-size-sm;
   color: $color-text-secondary;
-  line-height: 1.6;
+}
+
+.content {
+  height: calc(100vh - 100rpx);
 }

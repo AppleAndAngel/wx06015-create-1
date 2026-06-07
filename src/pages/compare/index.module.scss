@@ -1,113 +1,93 @@
 @use '@/styles/variables.scss' as *;
-@use '@/styles/theme.scss' as *;
 
-.container {
-  min-height: 100vh;
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
   background: $color-bg-page;
-  padding-bottom: 140rpx;
 }
 
-.header {
-  padding: $spacing-md $page-padding;
-  background: $color-bg-card;
-  @include flex-between;
-  border-bottom: 1rpx solid $color-border-light;
+.empty {
+  flex: 1;
+  @include flex-center;
+  flex-direction: column;
+  gap: $spacing-xl;
 }
 
-.headerTitle {
-  font-size: $font-size-lg;
-  font-weight: $font-weight-semibold;
-  color: $color-text-primary;
-}
-
-.headerCount {
-  color: $color-primary;
-  font-weight: $font-weight-bold;
-}
-
-.clearBtn {
-  font-size: $font-size-sm;
-  color: $color-text-secondary;
+.goShoppingBtn {
   @include button-reset;
+  padding: $spacing-md $spacing-xl * 2;
+  background: $color-primary;
+  color: $color-text-white;
+  font-size: $font-size-md;
+  font-weight: 500;
+  border-radius: $radius-button;
+  
   &:active {
-    opacity: 0.7;
+    background: $color-primary-dark;
   }
 }
 
-.productsHeader {
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.header {
+  @include flex-between;
+  padding: $spacing-lg;
   background: $color-bg-card;
-  padding: $spacing-md 0;
   border-bottom: 1rpx solid $color-border-light;
 }
 
-.productsScroll {
+.headerLeft {
+  display: flex;
+  align-items: baseline;
+  gap: $spacing-sm;
+}
+
+.title {
+  font-size: $font-size-xl;
+  font-weight: 600;
+  color: $color-text-primary;
+}
+
+.subtitle {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.clearBtn {
+  @include button-reset;
+  padding: $spacing-sm $spacing-md;
+  background: $color-bg-page;
+  color: $color-text-secondary;
+  font-size: $font-size-sm;
+  border-radius: $radius-button;
+  
+  &:active {
+    background: $color-border-light;
+  }
+}
+
+.tableContainer {
+  flex: 1;
   @include scroll-x-container;
 }
 
-.productsList {
-  display: inline-flex;
-  gap: $spacing-md;
-  padding: 0 $page-padding;
+.table {
+  min-width: 100%;
 }
 
-.productCard {
-  @include scroll-x-item(200rpx);
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-}
-
-.productRemove {
-  position: absolute;
-  top: -8rpx;
-  right: -8rpx;
-  width: 40rpx;
-  height: 40rpx;
-  border-radius: $radius-round;
-  background: rgba(0, 0, 0, 0.6);
-  color: #fff;
-  font-size: 24rpx;
-  @include flex-center;
-  line-height: 1;
-  z-index: 10;
-  @include button-reset;
-  border: none;
-}
-
-.productImage {
-  width: 180rpx;
-  height: 180rpx;
-  border-radius: $radius-sm;
-  background: $color-bg-page;
-}
-
-.productName {
-  width: 100%;
-  margin-top: $spacing-sm;
-  font-size: $font-size-sm;
-  color: $color-text-primary;
-  font-weight: $font-weight-medium;
-  text-align: center;
-  @include text-ellipsis-multi(2);
-  min-height: 68rpx;
-}
-
-.productPrice {
-  margin-top: $spacing-xs;
-  font-size: $font-size-lg;
-  font-weight: $font-weight-bold;
-  color: $color-price;
-}
-
-.productPriceSymbol {
-  font-size: $font-size-sm;
-  font-weight: $font-weight-medium;
-}
-
-.compareTable {
-  margin-top: $spacing-md;
+.tableHeader {
+  display: flex;
+  position: sticky;
+  top: 0;
   background: $color-bg-card;
+  z-index: $z-index-float;
+  border-bottom: 2rpx solid $color-border;
 }
 
 .tableRow {
@@ -115,142 +95,149 @@
   border-bottom: 1rpx solid $color-border-light;
 }
 
-.tableRow:last-child {
-  border-bottom: none;
+.tableCell {
+  flex-shrink: 0;
+  width: 240rpx;
+  padding: $spacing-md;
+  @include flex-center;
+  flex-direction: column;
+  gap: $spacing-xs;
+  min-height: 100rpx;
 }
 
-.rowLabel {
+.dimensionCell {
   width: 160rpx;
-  flex-shrink: 0;
-  padding: $spacing-md;
-  background: $color-bg-page;
+  background: $color-bg-card;
+  position: sticky;
+  left: 0;
+  z-index: $z-index-base;
+  border-right: 1rpx solid $color-border-light;
+}
+
+.dimensionLabel {
   font-size: $font-size-sm;
   color: $color-text-secondary;
-  display: flex;
-  align-items: center;
+  font-weight: 500;
 }
 
-.rowValues {
-  flex: 1;
+.productHeader {
+  position: relative;
+  padding-top: $spacing-md;
+}
+
+.productInfo {
   display: flex;
-  overflow-x: auto;
-  @include scroll-x-container;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.productImage {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: $radius-md;
+}
+
+.productName {
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  font-weight: 500;
+  text-align: center;
+  @include text-ellipsis-multi(2);
+  width: 100%;
+  line-height: 1.3;
+}
+
+.removeBtn {
+  position: absolute;
+  top: $spacing-sm;
+  right: $spacing-sm;
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: $radius-round;
+  background: $color-bg-page;
+  @include flex-center;
+  
+  &:active {
+    background: $color-border-light;
+  }
+}
+
+.removeIcon {
+  font-size: 24rpx;
+  color: $color-text-tertiary;
+  line-height: 1;
 }
 
 .valueCell {
-  @include scroll-x-item(200rpx);
-  display: inline-flex;
+  background: $color-bg-card;
+}
+
+.valueWrapper {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: $spacing-md;
-  font-size: $font-size-sm;
+  gap: $spacing-xs;
+}
+
+.value {
+  font-size: $font-size-base;
   color: $color-text-primary;
   text-align: center;
-  min-height: 80rpx;
-  position: relative;
+  
+  &.priceValue {
+    color: $color-price;
+    font-weight: 600;
+    font-size: $font-size-md;
+  }
 }
 
-.valueCellBest {
-  background: $color-primary-bg;
-  color: $color-primary-dark;
-  font-weight: $font-weight-medium;
+.bestValue {
+  background: rgba($color-primary, 0.05);
 }
 
-.bestTag {
-  position: absolute;
-  top: 8rpx;
-  left: 8rpx;
-  padding: 2rpx 10rpx;
-  background: $color-primary;
-  color: #fff;
-  font-size: $font-size-xs;
-  border-radius: $radius-xs;
-  line-height: 1.4;
+.bestLabel {
+  font-size: 20rpx;
+  color: $color-primary;
+  background: rgba($color-primary, 0.1);
+  padding: 4rpx 12rpx;
+  border-radius: $radius-sm;
+  font-weight: 500;
 }
 
-.ratingStars {
-  color: $color-rating;
-  font-size: $font-size-sm;
-}
-
-.tagsList {
+.tagsContainer {
   display: flex;
   flex-wrap: wrap;
   gap: $spacing-xs;
   justify-content: center;
 }
 
-.tagItem {
-  padding: 4rpx 12rpx;
+.tag {
+  @include tag-base;
   background: $color-tag-bg;
   color: $color-tag-text;
-  font-size: $font-size-xs;
-  border-radius: $radius-xs;
-  white-space: nowrap;
+  font-size: 20rpx;
 }
 
-.priceValue {
-  font-size: $font-size-base;
-  font-weight: $font-weight-semibold;
-  color: $color-price;
-}
-
-.actionBar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+.footer {
+  padding: $spacing-lg;
   background: $color-bg-card;
-  padding: $spacing-md $page-padding;
-  @include safe-area-bottom;
-  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.06);
-  display: flex;
-  gap: $spacing-md;
+  border-top: 1rpx solid $color-border-light;
+  padding-bottom: calc(#{$spacing-lg} + env(safe-area-inset-bottom));
 }
 
-.actionBtn {
-  flex: 1;
-  height: $button-height-lg;
-  border-radius: $radius-button;
-  font-size: $font-size-base;
-  font-weight: $font-weight-medium;
+.addAllBtn {
   @include button-reset;
-  @include flex-center;
-  transition: all $transition-base;
-  &:active {
-    transform: scale(0.98);
-    opacity: 0.9;
-  }
-}
-
-.cartBtn {
-  background: linear-gradient(135deg, $color-secondary 0%, #EA580C 100%);
-  color: #fff;
-}
-
-.detailBtn {
-  background: #fff;
-  color: $color-primary;
-  border: 2rpx solid $color-primary;
-}
-
-.emptyContainer {
-  padding: $spacing-2xl;
-}
-
-.shopBtn {
-  margin-top: $spacing-xl;
+  width: 100%;
   height: $button-height-lg;
-  padding: 0 $spacing-2xl;
-  background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
-  color: #fff;
-  font-size: $font-size-base;
-  font-weight: $font-weight-medium;
+  background: $color-primary;
+  color: $color-text-white;
+  font-size: $font-size-md;
+  font-weight: 500;
   border-radius: $radius-button;
-  @include button-reset;
   @include flex-center;
+  
   &:active {
-    transform: scale(0.98);
-    opacity: 0.9;
+    background: $color-primary-dark;
   }
 }

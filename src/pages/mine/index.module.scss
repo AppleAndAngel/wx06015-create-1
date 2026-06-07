@@ -1,71 +1,99 @@
 @use '@/styles/variables.scss' as *;
-@use '@/styles/theme.scss' as *;
 
-.container {
-  min-height: 100vh;
+.page {
+  height: 100vh;
   background: $color-bg-page;
 }
 
 .header {
-  background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
-  padding: $spacing-2xl $page-padding $spacing-xl;
   display: flex;
   align-items: center;
   gap: $spacing-lg;
+  padding: $spacing-xl $spacing-lg $spacing-xxl;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
 }
 
 .avatar {
-  width: 128rpx;
-  height: 128rpx;
+  width: 120rpx;
+  height: 120rpx;
   border-radius: $radius-round;
   background: rgba(255, 255, 255, 0.2);
   @include flex-center;
+}
+
+.avatarIcon {
   font-size: 56rpx;
-  border: 4rpx solid rgba(255, 255, 255, 0.3);
 }
 
 .userInfo {
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
 }
 
 .userName {
   font-size: $font-size-xl;
-  font-weight: $font-weight-semibold;
-  color: #fff;
+  color: $color-text-white;
+  font-weight: 600;
 }
 
 .userDesc {
-  margin-top: $spacing-xs;
   font-size: $font-size-sm;
   color: rgba(255, 255, 255, 0.8);
 }
 
-.orderSection {
-  margin: -$spacing-lg $page-padding 0;
+.compareNotice {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  margin: -$spacing-md $spacing-lg $spacing-lg;
+  padding: $spacing-md $spacing-lg;
   background: $color-bg-card;
-  border-radius: $radius-md;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+  
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.compareIcon {
+  font-size: $font-size-lg;
+}
+
+.compareText {
+  flex: 1;
+  font-size: $font-size-base;
+  color: $color-text-primary;
+}
+
+.compareArrow {
+  font-size: $font-size-lg;
+  color: $color-text-tertiary;
+}
+
+.orderSection {
+  margin: $spacing-lg;
   padding: $spacing-lg;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
   box-shadow: $shadow-card;
 }
 
-.sectionTitle {
+.sectionHeader {
   @include flex-between;
   margin-bottom: $spacing-lg;
 }
 
-.titleText {
+.sectionTitle {
   font-size: $font-size-lg;
-  font-weight: $font-weight-semibold;
   color: $color-text-primary;
+  font-weight: 600;
 }
 
-.moreLink {
+.sectionMore {
   font-size: $font-size-sm;
-  color: $color-text-secondary;
-  @include button-reset;
-  &:active {
-    opacity: 0.7;
-  }
+  color: $color-text-tertiary;
 }
 
 .orderTabs {
@@ -78,101 +106,78 @@
   flex-direction: column;
   align-items: center;
   gap: $spacing-sm;
+  
+  &:active {
+    opacity: 0.7;
+  }
 }
 
 .orderIcon {
-  width: 80rpx;
-  height: 80rpx;
-  border-radius: $radius-round;
-  background: $color-primary-bg;
-  @include flex-center;
-  font-size: 40rpx;
+  font-size: 48rpx;
 }
 
 .orderLabel {
   font-size: $font-size-sm;
-  color: $color-text-primary;
+  color: $color-text-secondary;
 }
 
 .menuSection {
-  margin: $spacing-md $page-padding;
+  margin: $spacing-lg;
   background: $color-bg-card;
-  border-radius: $radius-md;
-  overflow: hidden;
+  border-radius: $radius-lg;
   box-shadow: $shadow-card;
+  overflow: hidden;
 }
 
 .menuItem {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: $spacing-lg;
   border-bottom: 1rpx solid $color-border-light;
-  transition: all $transition-base;
-  &:active {
-    background: $color-bg-page;
-  }
+  
   &:last-child {
     border-bottom: none;
   }
+  
+  &:active {
+    background: $color-bg-page;
+  }
+}
+
+.menuLeft {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
 }
 
 .menuIcon {
-  width: 64rpx;
-  height: 64rpx;
-  border-radius: $radius-sm;
-  background: $color-primary-bg;
-  @include flex-center;
-  font-size: 32rpx;
-  margin-right: $spacing-md;
+  font-size: $font-size-xl;
 }
 
 .menuLabel {
-  flex: 1;
   font-size: $font-size-base;
   color: $color-text-primary;
 }
 
-.menuArrow {
-  font-size: $font-size-lg;
-  color: $color-text-tertiary;
-}
-
-.toolSection {
-  margin: $spacing-md $page-padding;
-  background: $color-bg-card;
-  border-radius: $radius-md;
-  overflow: hidden;
-  box-shadow: $shadow-card;
-}
-
-.compareTip {
-  margin: $spacing-md $page-padding;
-  padding: $spacing-md $spacing-lg;
-  background: $color-primary-bg;
-  border-radius: $radius-md;
+.menuRight {
   display: flex;
   align-items: center;
   gap: $spacing-sm;
 }
 
-.tipIcon {
-  font-size: 32rpx;
+.badge {
+  min-width: 40rpx;
+  height: 40rpx;
+  padding: 0 $spacing-sm;
+  background: $color-price;
+  color: $color-text-white;
+  font-size: $font-size-xs;
+  border-radius: $radius-round;
+  @include flex-center;
 }
 
-.tipText {
-  flex: 1;
-  font-size: $font-size-sm;
-  color: $color-primary-dark;
-}
-
-.tipBtn {
-  padding: $spacing-sm $spacing-md;
-  background: $color-primary;
-  color: #fff;
-  font-size: $font-size-sm;
-  border-radius: $radius-button;
-  @include button-reset;
-  &:active {
-    opacity: 0.9;
-  }
+.menuArrow {
+  font-size: $font-size-lg;
+  color: $color-text-tertiary;
 }

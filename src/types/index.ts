@@ -2,11 +2,11 @@ export interface Product {
   id: string
   name: string
   category: string
-  categoryId: string
   price: number
   originalPrice: number
-  unit: string
+  image: string
   spec: string
+  packaging: string
   origin: string
   weight: string
   shelfLife: string
@@ -14,10 +14,8 @@ export interface Product {
   rating: number
   reviewCount: number
   sales: number
-  image: string
-  images: string[]
-  description: string
   tags: string[]
+  description: string
   reviews: Review[]
 }
 
@@ -27,7 +25,6 @@ export interface Review {
   rating: number
   content: string
   date: string
-  images: string[]
 }
 
 export interface Category {
@@ -44,7 +41,6 @@ export interface CartItem {
 
 export interface CompareStore {
   compareList: Product[]
-  maxCompareCount: number
   addToCompare: (product: Product) => void
   removeFromCompare: (productId: string) => void
   clearCompare: () => void
@@ -58,8 +54,6 @@ export interface CartStore {
   updateQuantity: (productId: string, quantity: number) => void
   toggleSelect: (productId: string) => void
   toggleSelectAll: (selected: boolean) => void
-  clearCart: () => void
   getTotalPrice: () => number
   getSelectedCount: () => number
-  getSelectedItems: () => CartItem[]
 }

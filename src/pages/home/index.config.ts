@@ -1,5 +1,6 @@
 export default definePageConfig({
-  navigationBarTitleText: '鲜果对比',
+  navigationBarTitleText: '首页',
   enablePullDownRefresh: true,
+  enableReachBottom: true,
   backgroundTextStyle: 'dark'
 })

@@ -1,66 +1,59 @@
-$page-padding: 32rpx;
-$max-content-width: 686rpx;
+@use './theme.scss' as *;
 
 $spacing-xs: 8rpx;
 $spacing-sm: 16rpx;
 $spacing-md: 24rpx;
 $spacing-lg: 32rpx;
 $spacing-xl: 48rpx;
-$spacing-2xl: 64rpx;
+$spacing-xxl: 64rpx;
+
+$page-padding: $spacing-lg;
+$max-content-width: 686rpx;
 
 $radius-xs: 4rpx;
 $radius-sm: 8rpx;
-$radius-md: 16rpx;
-$radius-lg: 24rpx;
+$radius-md: 12rpx;
+$radius-lg: 16rpx;
+$radius-xl: 24rpx;
 $radius-button: 48rpx;
 $radius-round: 999rpx;
 
-$shadow-card: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
-$shadow-card-hover: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
-$shadow-float: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
-$shadow-popup: 0 8rpx 32rpx rgba(0, 0, 0, 0.12);
-
-$font-size-xs: 22rpx;
-$font-size-sm: 24rpx;
-$font-size-base: 28rpx;
-$font-size-lg: 30rpx;
-$font-size-xl: 34rpx;
-$font-size-2xl: 40rpx;
-
-$font-weight-normal: 400;
-$font-weight-medium: 500;
-$font-weight-semibold: 600;
-$font-weight-bold: 700;
+$shadow-card: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
+$shadow-float: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+$shadow-card-hover: 0 4rpx 20rpx rgba(0, 0, 0, 0.12);
+$shadow-popup: 0 8rpx 32rpx rgba(0, 0, 0, 0.15);
 
 $button-height-sm: 64rpx;
 $button-height-md: 80rpx;
 $button-height-lg: 96rpx;
 
-$transition-base: 0.2s ease;
-$transition-slow: 0.3s ease;
+$transition-base: 0.3s ease;
+$transition-fast: 0.15s ease;
+$transition-slow: 0.5s ease;
 
-$z-index-base: 1;
-$z-index-popup: 100;
-$z-index-toast: 500;
-$z-index-modal: 1000;
+$font-size-xs: 22rpx;
+$font-size-sm: 24rpx;
+$font-size-base: 28rpx;
+$font-size-md: 30rpx;
+$font-size-lg: 34rpx;
+$font-size-xl: 40rpx;
 
 @mixin button-reset {
-  background: transparent;
+  background: none;
   border: none;
-  border-radius: 0;
   padding: 0;
   margin: 0;
-  font-size: inherit;
-  line-height: inherit;
-  &:active {
-    opacity: 1;
-  }
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  outline: none;
+  -webkit-appearance: none;
 }
 
 @mixin text-ellipsis {
   overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 @mixin text-ellipsis-multi($lines: 2) {
@@ -83,10 +76,15 @@ $z-index-modal: 1000;
   justify-content: space-between;
 }
 
+@mixin flex-start {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
 @mixin scroll-x-container {
   white-space: nowrap;
   overflow-x: auto;
-  overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
   &::-webkit-scrollbar {
     display: none;
@@ -96,11 +94,23 @@ $z-index-modal: 1000;
 @mixin scroll-x-item($width) {
   display: inline-block;
   width: $width;
-  vertical-align: top;
-  white-space: normal;
+  margin-right: $spacing-md;
+  &:last-child {
+    margin-right: 0;
+  }
 }
 
-@mixin safe-area-bottom {
-  padding-bottom: constant(safe-area-inset-bottom);
-  padding-bottom: env(safe-area-inset-bottom);
+@mixin card-base {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+  padding: $spacing-lg;
+}
+
+@mixin tag-base {
+  display: inline-block;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  white-space: nowrap;
 }

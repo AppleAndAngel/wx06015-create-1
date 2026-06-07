@@ -1,29 +1,36 @@
 $color-primary: #22C55E;
-$color-primary-light: #86EFAC;
+$color-primary-light: #4ADE80;
 $color-primary-dark: #16A34A;
-$color-primary-bg: rgba(34, 197, 94, 0.08);
 
-$color-secondary: #F97316;
-$color-secondary-light: #FDBA74;
-$color-secondary-bg: rgba(249, 115, 22, 0.08);
+$color-price: #EF4444;
+$color-price-light: #FCA5A5;
 
-$color-bg-page: #F8FAFC;
-$color-bg-card: #FFFFFF;
-
-$color-text-primary: #1E293B;
-$color-text-secondary: #64748B;
-$color-text-tertiary: #94A3B8;
-$color-text-disabled: #CBD5E1;
-
-$color-border: #E2E8F0;
-$color-border-light: #F1F5F9;
+$color-rating: #F59E0B;
+$color-rating-light: #FCD34D;
 
 $color-success: #10B981;
 $color-warning: #F59E0B;
 $color-error: #EF4444;
 $color-info: #3B82F6;
 
-$color-price: #EF4444;
-$color-tag-bg: rgba(34, 197, 94, 0.1);
-$color-tag-text: #16A34A;
-$color-rating: #F59E0B;
+$color-bg-page: #F8FAFC;
+$color-bg-card: #FFFFFF;
+$color-bg-tag: #F0FDF4;
+$color-bg-popup: rgba(0, 0, 0, 0.5);
+
+$color-text-primary: #1D2129;
+$color-text-secondary: #4E5969;
+$color-text-tertiary: #86909C;
+$color-text-placeholder: #C9CDD4;
+$color-text-white: #FFFFFF;
+
+$color-border: #E5E7EB;
+$color-border-light: #F3F4F6;
+$color-border-primary: $color-primary;
+
+$color-tag-text: $color-primary;
+$color-tag-bg: $color-bg-tag;
+
+$z-index-popup: 1000;
+$z-index-float: 100;
+$z-index-base: 1;

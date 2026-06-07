@@ -2,6 +2,13 @@ export const formatPrice = (price: number): string => {
   return price.toFixed(2)
 }
 
+export const renderStars = (rating: number): string => {
+  const fullStars = Math.floor(rating)
+  const hasHalfStar = rating % 1 >= 0.5
+  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0)
+  return '★'.repeat(fullStars) + (hasHalfStar ? '☆' : '') + '☆'.repeat(emptyStars)
+}
+
 export const formatSales = (sales: number): string => {
   if (sales >= 10000) {
     return (sales / 10000).toFixed(1) + '万'
@@ -9,19 +16,9 @@ export const formatSales = (sales: number): string => {
   return sales.toString()
 }
 
-export const renderStars = (rating: number): string => {
-  const fullStars = Math.floor(rating)
-  const hasHalf = rating % 1 >= 0.5
-  let stars = ''
-  for (let i = 0; i < fullStars; i++) {
-    stars += '★'
+export const formatReviewCount = (count: number): string => {
+  if (count >= 10000) {
+    return (count / 10000).toFixed(1) + '万+'
   }
-  if (hasHalf) {
-    stars += '☆'
-  }
-  const emptyStars = 5 - Math.ceil(rating)
-  for (let i = 0; i < emptyStars; i++) {
-    stars += '☆'
-  }
-  return stars
+  return count + '+'
 }

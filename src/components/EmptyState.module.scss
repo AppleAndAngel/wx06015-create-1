@@ -1,28 +1,24 @@
 @use '@/styles/variables.scss' as *;
-@use '@/styles/theme.scss' as *;
 
 .container {
-  padding: $spacing-2xl $spacing-lg;
+  padding: $spacing-xxl * 2;
   @include flex-center;
   flex-direction: column;
+  gap: $spacing-md;
 }
 
 .icon {
   font-size: 120rpx;
-  margin-bottom: $spacing-lg;
-  opacity: 0.5;
 }
 
 .title {
   font-size: $font-size-lg;
   color: $color-text-secondary;
-  font-weight: $font-weight-medium;
+  font-weight: 500;
 }
 
-.desc {
-  margin-top: $spacing-sm;
+.description {
   font-size: $font-size-sm;
   color: $color-text-tertiary;
   text-align: center;
-  line-height: 1.6;
 }
