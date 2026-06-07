@@ -55,22 +55,6 @@
   box-shadow: $shadow-card;
 }
 
-.sectionHeader {
-  @include flex-between;
-  margin-bottom: $spacing-md;
-}
-
-.sectionTitle {
-  font-size: $font-size-lg;
-  font-weight: 600;
-  color: $color-text-primary;
-}
-
-.sectionMore {
-  font-size: $font-size-sm;
-  color: $color-text-tertiary;
-}
-
 .categoryGrid {
   display: flex;
   flex-wrap: wrap;
@@ -99,8 +83,108 @@
   color: $color-text-secondary;
 }
 
-.productSection {
+.refreshTip {
+  @include flex-center;
+  padding: $spacing-md $spacing-lg;
+  
+  &:before, &:after {
+    content: '';
+    flex: 1;
+    height: 1rpx;
+    background: linear-gradient(90deg, transparent, $color-border, transparent);
+  }
+  
+  &:before {
+    margin-right: $spacing-md;
+  }
+  
+  &:after {
+    margin-left: $spacing-md;
+  }
+}
+
+.refreshTipText {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  white-space: nowrap;
+}
+
+.section {
+  margin: 0 $spacing-lg $spacing-lg;
   padding: $spacing-lg;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+  transition: transform $transition-fast, box-shadow $transition-fast;
+  
+  &:active {
+    transform: translateY(2rpx);
+    box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
+  }
+}
+
+.section-new-arrival {
+  border: 2rpx solid rgba(255, 107, 53, 0.3);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.08), 0 0 0 0 rgba(255, 107, 53, 0.2);
+  }
+  50% {
+    box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.08), 0 0 0 12rpx rgba(255, 107, 53, 0);
+  }
+}
+
+.sectionHeader {
+  @include flex-between;
+  margin-bottom: $spacing-md;
+  padding-left: $spacing-md;
+  border-left: 6rpx solid $color-primary;
+  border-radius: 2rpx;
+}
+
+.sectionTitleWrapper {
+  @include flex-start;
+  gap: $spacing-sm;
+}
+
+.sectionIcon {
+  font-size: $font-size-xl;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: 600;
+  color: $color-text-primary;
+}
+
+.newBadge {
+  font-size: $font-size-xs;
+  font-weight: 600;
+  color: #fff;
+  padding: 2rpx 12rpx;
+  border-radius: $radius-sm;
+  animation: bounce 1s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4rpx);
+  }
+}
+
+.sectionMore {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  transition: color $transition-fast;
+  
+  &:active {
+    color: $color-primary;
+  }
 }
 
 .productGrid {
@@ -111,6 +195,24 @@
 
 .productGrid > * {
   width: calc((100% - 24rpx) / 2);
+}
+
+.moreSection {
+  margin: 0 $spacing-lg $spacing-lg;
+  padding: $spacing-lg;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+}
+
+.loadingMore {
+  @include flex-center;
+  padding: $spacing-lg 0;
+}
+
+.loadingText {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
 }
 
 .footer {

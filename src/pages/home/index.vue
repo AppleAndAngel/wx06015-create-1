@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { View, Text, ScrollView, Swiper, SwiperItem, Image } from '@tarojs/components'
 import Taro, { useDidShow, usePullDownRefresh, useReachBottom } from '@tarojs/taro'
-import type { Product } from '@/types'
+import type { Product, Category } from '@/types'
 import { products, categories } from '@/mock/products'
+import { useArrivalStore } from '@/stores/arrival'
 import ProductCard from '@/components/ProductCard.vue'
 import CompareBar from '@/components/CompareBar.vue'
 import styles from './index.module.scss'
@@ -14,12 +15,183 @@ const banners = ref([
   { id: 3, image: 'https://picsum.photos/id/431/750/400', title: '限时特惠' }
 ])
 
-const productList = ref<Product[]>([])
-const loading = ref(false)
+const arrivalStore = useArrivalStore()
 
-const loadProducts = () => {
-  console.log('[Home] 加载商品列表')
-  productList.value = products
+const page = ref(1)
+const pageSize = 6
+const loading = ref(false)
+const hasMore = ref(true)
+const lastRefreshTime = ref<Date | null>(null)
+const newArrivalProducts = ref<Product[]>([])
+
+interface Section {
+  id: string
+  title: string
+  icon: string
+  products: Product[]
+  categoryId?: string
+  bgColor: string
+  accentColor: string
+}
+
+const hotProducts = computed(() => 
+  [...products].filter(p => p.inStock).sort((a, b) => b.sales - a.sales).slice(0, 4)
+)
+
+const newProducts = computed(() => 
+  [...products].filter(p => p.inStock).sort((a, b) => b.rating - a.rating).slice(0, 4)
+)
+
+const fruitProducts = computed(() => 
+  products.filter(p => p.category === 'fruit' && p.inStock)
+)
+
+const meatProducts = computed(() => 
+  products.filter(p => p.category === 'meat' && p.inStock)
+)
+
+const seafoodProducts = computed(() => 
+  products.filter(p => p.category === 'seafood' && p.inStock)
+)
+
+const sections = computed<Section[]>(() => {
+  const result: Section[] = []
+  
+  if (newArrivalProducts.value.length > 0) {
+    result.push({
+      id: 'new-arrival',
+      title: '刚刚到货',
+      icon: '🎉',
+      products: newArrivalProducts.value,
+      bgColor: 'linear-gradient(135deg, #FFF5F5 0%, #FFFAF0 100%)',
+      accentColor: '#FF6B35'
+    })
+  }
+  
+  result.push({
+    id: 'hot',
+    title: '热销爆款',
+    icon: '🔥',
+    products: hotProducts.value,
+    bgColor: 'linear-gradient(135deg, #FFF0F0 0%, #FFF5F5 100%)',
+    accentColor: '#FF4D4F'
+  })
+  
+  result.push({
+    id: 'new',
+    title: '高分精选',
+    icon: '⭐',
+    products: newProducts.value,
+    bgColor: 'linear-gradient(135deg, #FFFBE6 0%, #FFFDF0 100%)',
+    accentColor: '#FAAD14'
+  })
+  
+  if (fruitProducts.value.length > 0) {
+    result.push({
+      id: 'fruit',
+      title: '新鲜水果',
+      icon: '🍎',
+      products: fruitProducts.value,
+      categoryId: 'fruit',
+      bgColor: 'linear-gradient(135deg, #F6FFED 0%, #F9FFF0 100%)',
+      accentColor: '#52C41A'
+    })
+  }
+  
+  if (meatProducts.value.length > 0) {
+    result.push({
+      id: 'meat',
+      title: '精品肉类',
+      icon: '🥩',
+      products: meatProducts.value,
+      categoryId: 'meat',
+      bgColor: 'linear-gradient(135deg, #FFF0F6 0%, #FFF5F9 100%)',
+      accentColor: '#EB2F96'
+    })
+  }
+  
+  if (seafoodProducts.value.length > 0) {
+    result.push({
+      id: 'seafood',
+      title: '海鲜水产',
+      icon: '🦐',
+      products: seafoodProducts.value,
+      categoryId: 'seafood',
+      bgColor: 'linear-gradient(135deg, #E6F7FF 0%, #F0F9FF 100%)',
+      accentColor: '#1890FF'
+    })
+  }
+  
+  return result
+})
+
+const paginatedProducts = ref<Product[]>([])
+
+const loadMoreProducts = () => {
+  if (loading.value || !hasMore.value) return
+  
+  loading.value = true
+  console.log('[Home] 加载更多商品，第', page.value, '页')
+  
+  setTimeout(() => {
+    const allProducts = products.filter(p => p.inStock)
+    const start = (page.value - 1) * pageSize
+    const end = start + pageSize
+    const newProducts = allProducts.slice(start, end)
+    
+    if (newProducts.length > 0) {
+      paginatedProducts.value = [...paginatedProducts.value, ...newProducts]
+      page.value++
+      
+      if (end >= allProducts.length) {
+        hasMore.value = false
+      }
+    } else {
+      hasMore.value = false
+    }
+    
+    loading.value = false
+  }, 500)
+}
+
+const loadInitialProducts = () => {
+  console.log('[Home] 初始化商品列表')
+  page.value = 1
+  hasMore.value = true
+  paginatedProducts.value = []
+  loadMoreProducts()
+}
+
+const handleRefresh = () => {
+  console.log('[Home] 下拉刷新')
+  
+  const restockedProducts = arrivalStore.checkStockUpdates()
+  if (restockedProducts.length > 0) {
+    newArrivalProducts.value = restockedProducts
+  }
+  
+  page.value = 1
+  hasMore.value = true
+  paginatedProducts.value = []
+  lastRefreshTime.value = new Date()
+  
+  loadMoreProducts()
+  
+  setTimeout(() => {
+    Taro.stopPullDownRefresh()
+    
+    if (restockedProducts.length > 0) {
+      Taro.showToast({
+        title: `有${restockedProducts.length}件新到货`,
+        icon: 'success'
+      })
+    } else {
+      Taro.showToast({
+        title: '已更新最新商品',
+        icon: 'success'
+      })
+    }
+  }, 800)
 }
 
 const handleProductClick = (product: Product) => {
@@ -36,6 +208,15 @@ const handleCategoryClick = (categoryId: string) => {
   })
 }
 
+const handleSectionMore = (section: Section) => {
+  console.log('[Home] 查看更多分区:', section.title)
+  if (section.categoryId) {
+    Taro.switchTab({
+      url: '/pages/category/index'
+    })
+  }
+}
+
 const handleSearch = () => {
   Taro.navigateTo({
     url: '/pages/search/index'
@@ -49,27 +230,39 @@ const handleComboClick = () => {
   })
 }
 
+const formatRefreshTime = (date: Date) => {
+  const now = new Date()
+  const diff = Math.floor((now.getTime() - date.getTime()) / 1000)
+  if (diff < 60) return '刚刚更新'
+  if (diff < 3600) return `${Math.floor(diff / 60)}分钟前更新`
+  return `${Math.floor(diff / 3600)}小时前更新`
+}
+
 useDidShow(() => {
   console.log('[Home] 页面显示')
-  if (productList.value.length === 0) {
-    loadProducts()
+  if (paginatedProducts.value.length === 0) {
+    loadInitialProducts()
+  }
+  
+  const restocked = arrivalStore.checkStockUpdates()
+  if (restocked.length > 0) {
+    newArrivalProducts.value = [...newArrivalProducts.value, ...restocked]
   }
 })
 
 usePullDownRefresh(() => {
-  console.log('[Home] 下拉刷新')
-  loadProducts()
-  setTimeout(() => {
-    Taro.stopPullDownRefresh()
-  }, 1000)
+  handleRefresh()
 })
 
 useReachBottom(() => {
   console.log('[Home] 触底加载更多')
+  if (hasMore.value && !loading.value) {
+    loadMoreProducts()
+  }
 })
 
 onMounted(() => {
-  loadProducts()
+  loadInitialProducts()
 })
 </script>
 
@@ -123,14 +316,35 @@ onMounted(() => {
         </view>
       </view>
 
-      <view :class="styles.productSection">
-        <view :class="styles.sectionHeader">
-          <text :class="styles.sectionTitle">为你推荐</text>
-          <text :class="styles.sectionMore">查看更多 ›</text>
+      <view v-if="lastRefreshTime" :class="styles.refreshTip">
+        <text :class="styles.refreshTipText">{{ formatRefreshTime(lastRefreshTime) }}</text>
+      </view>
+
+      <view
+        v-for="section in sections"
+        :key="section.id"
+        :class="[styles.section, styles[`section-${section.id}`]]"
+        :style="{ background: section.bgColor }"
+      >
+        <view :class="styles.sectionHeader" :style="{ borderLeftColor: section.accentColor }">
+          <view :class="styles.sectionTitleWrapper">
+            <text :class="styles.sectionIcon">{{ section.icon }}</text>
+            <text :class="styles.sectionTitle">{{ section.title }}</text>
+            <text 
+              v-if="section.id === 'new-arrival'" 
+              :class="styles.newBadge"
+              :style="{ background: section.accentColor }"
+            >NEW</text>
+          </view>
+          <text 
+            v-if="section.products.length >= 4" 
+            :class="styles.sectionMore"
+            @click="handleSectionMore(section)"
+          >查看更多 ›</text>
         </view>
         <view :class="styles.productGrid">
           <ProductCard
-            v-for="product in productList"
+            v-for="product in section.products.slice(0, 4)"
             :key="product.id"
             :product="product"
             @click="handleProductClick"
@@ -138,8 +352,29 @@ onMounted(() => {
         </view>
       </view>
 
-      <view :class="styles.footer">
-        <text :class="styles.footerText">— 已经到底啦 —</text>
+      <view :class="styles.moreSection">
+        <view :class="styles.sectionHeader">
+          <view :class="styles.sectionTitleWrapper">
+            <text :class="styles.sectionIcon">📦</text>
+            <text :class="styles.sectionTitle">更多好物</text>
+          </view>
+        </view>
+        <view :class="styles.productGrid">
+          <ProductCard
+            v-for="product in paginatedProducts"
+            :key="product.id"
+            :product="product"
+            @click="handleProductClick"
+          />
+        </view>
+        
+        <view v-if="loading" :class="styles.loadingMore">
+          <text :class="styles.loadingText">加载中...</text>
+        </view>
+        
+        <view v-else-if="!hasMore && paginatedProducts.length > 0" :class="styles.footer">
+          <text :class="styles.footerText">— 已经到底啦 —</text>
+        </view>
       </view>
     </scroll-view>
 
