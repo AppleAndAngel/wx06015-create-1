@@ -28,6 +28,8 @@ export function createOrder(data: CreateOrderData): Promise<{ data: Order }> {
       payAmount: data.payAmount,
       status: 'pending',
       address: data.address,
+      deliveryType: data.deliveryType || 'delivery',
+      pickupInfo: data.pickupInfo,
       createdAt: new Date().toISOString(),
     }
     orders.unshift(order)

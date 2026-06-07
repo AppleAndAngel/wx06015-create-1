@@ -64,18 +64,6 @@ export interface Address {
   isDefault: boolean
 }
 
-export interface Order {
-  id: number
-  orderNo: string
-  items: OrderItem[]
-  totalAmount: number
-  payAmount: number
-  status: 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled'
-  address: Address
-  createdAt: string
-  paidAt?: string
-}
-
 export interface User {
   id: number
   phone: string
@@ -109,13 +97,6 @@ export interface NewUserZoneData {
   }
   coupon: Coupon
   products: Product[]
-}
-
-export interface CreateOrderData {
-  items: OrderItem[]
-  totalAmount: number
-  payAmount: number
-  address: Address
 }
 
 export interface PaymentResult {
@@ -437,4 +418,74 @@ export interface SeasonalRecipeData {
   currentSolarTerm: SolarTerm
   solarTerms: SolarTerm[]
   recipes: Recipe[]
+}
+
+export interface PickupStore {
+  id: number
+  name: string
+  address: string
+  phone: string
+  distance: string
+  distanceValue: number
+  businessHours: string
+  latitude: number
+  longitude: number
+  tags: string[]
+}
+
+export interface PickupTimeSlot {
+  id: string
+  label: string
+  startTime: string
+  endTime: string
+  available: boolean
+  capacity: number
+  used: number
+}
+
+export interface PickupCode {
+  id: number
+  orderId: number
+  orderNo: string
+  code: string
+  qrCode: string
+  storeId: number
+  storeName: string
+  storeAddress: string
+  timeSlotLabel: string
+  pickupDeadline: string
+  status: 'pending' | 'picked' | 'expired'
+  createdAt: string
+  pickedAt?: string
+}
+
+export type DeliveryType = 'delivery' | 'pickup'
+
+export interface PickupInfo {
+  store: PickupStore | null
+  timeSlot: PickupTimeSlot | null
+}
+
+export interface CreateOrderData {
+  items: OrderItem[]
+  totalAmount: number
+  payAmount: number
+  address?: Address
+  deliveryType: DeliveryType
+  pickupInfo?: PickupInfo
+}
+
+export interface Order {
+  id: number
+  orderNo: string
+  items: OrderItem[]
+  totalAmount: number
+  payAmount: number
+  status: 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled'
+  address?: Address
+  deliveryType: DeliveryType
+  pickupInfo?: PickupInfo
+  pickupCode?: PickupCode
+  createdAt: string
+  paidAt?: string
 }

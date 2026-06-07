@@ -8,7 +8,8 @@ function delay(ms: number = 300): Promise<void> {
 }
 
 function getCartItems(): CartItem[] {
-  return getItem<CartItem[]>(CART_KEY) || []
+  const items = getItem<CartItem[]>(CART_KEY)
+  return Array.isArray(items) ? items : []
 }
 
 export function getCart(): Promise<CartItem[]> {

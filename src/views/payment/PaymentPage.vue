@@ -4,14 +4,17 @@ import { useRoute, useRouter } from 'vue-router'
 import { RadioGroup, Radio, Button, Loading, Toast } from 'vant'
 import AppHeader from '@/components/AppHeader.vue'
 import { useOrderStore } from '@/stores/order'
+import { usePickupStore } from '@/stores/pickup'
 import { formatPrice } from '@/utils/format'
 
 const route = useRoute()
 const router = useRouter()
 const orderStore = useOrderStore()
+const pickupStore = usePickupStore()
 
 const orderId = Number(route.params.orderId)
 const order = computed(() => orderStore.currentOrder)
+const isPickupOrder = computed(() => order.value?.deliveryType === 'pickup')
 
 const payMethod = ref<'wechat' | 'alipay' | 'balance'>('wechat')
 const paying = ref(false)
@@ -28,9 +31,25 @@ const onPay = async () => {
   try {
     await new Promise((resolve) => setTimeout(resolve, 1500))
     showSuccess.value = true
-    setTimeout(() => {
-      router.replace(`/user/orders/${orderId}`)
-    }, 2000)
+
+    if (isPickupOrder.value && order.value?.pickupInfo?.store && order.value?.pickupInfo?.timeSlot) {
+      await pickupStore.generatePickupCode(
+        order.value.id,
+        order.value.orderNo,
+        order.value.pickupInfo.store.id,
+        order.value.pickupInfo.store.name,
+        order.value.pickupInfo.store.address,
+        order.value.pickupInfo.timeSlot.label
+      )
+      pickupStore.resetSelection()
+      setTimeout(() => {
+        router.replace(`/pickup/code/${orderId}`)
+      }, 2000)
+    } else {
+      setTimeout(() => {
+        router.replace(`/user/orders/${orderId}`)
+      }, 2000)
+    }
   } finally {
     paying.value = false
   }

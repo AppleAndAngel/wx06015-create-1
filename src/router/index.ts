@@ -29,6 +29,9 @@ import GroupMealMyOrdersPage from '@/views/group-meal/MyOrdersPage.vue'
 import StockpilePage from '@/views/stockpile/IndexPage.vue'
 import SeasonalRecipePage from '@/views/seasonal-recipe/IndexPage.vue'
 import RecipeDetailPage from '@/views/recipe-detail/IndexPage.vue'
+import PickupStoreListPage from '@/views/pickup/StoreListPage.vue'
+import PickupTimeSlotPage from '@/views/pickup/TimeSlotPage.vue'
+import PickupCodePage from '@/views/pickup/PickupCodePage.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -170,6 +173,21 @@ const router = createRouter({
     {
       path: '/recipe/:id',
       component: RecipeDetailPage,
+    },
+    {
+      path: '/pickup/stores',
+      component: PickupStoreListPage,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/pickup/time-slot',
+      component: PickupTimeSlotPage,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/pickup/code/:orderId',
+      component: PickupCodePage,
+      meta: { requiresAuth: true },
     },
   ],
 })

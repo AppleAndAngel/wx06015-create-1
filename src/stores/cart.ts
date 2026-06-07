@@ -11,9 +11,21 @@ import type { CartItem, Product } from '@/types'
 export const useCartStore = defineStore('cart', () => {
   const items = ref<CartItem[]>([])
 
-  const totalCount = computed(() => items.value.length)
+  function ensureItemsArray() {
+    if (!Array.isArray(items.value)) {
+      items.value = []
+    }
+  }
 
-  const selectedItems = computed(() => items.value.filter((item) => item.selected))
+  const totalCount = computed(() => {
+    ensureItemsArray()
+    return items.value.length
+  })
+
+  const selectedItems = computed(() => {
+    ensureItemsArray()
+    return items.value.filter((item) => item.selected)
+  })
 
   const selectedCount = computed(() => selectedItems.value.length)
 
@@ -27,6 +39,7 @@ export const useCartStore = defineStore('cart', () => {
   }
 
   async function addItem(product: Product, specValues: Record<string, string>, quantity: number) {
+    ensureItemsArray()
     const { data } = await addCartItemApi(product.id, specValues, quantity)
     const existing = items.value.find(
       (item) => item.productId === product.id && JSON.stringify(item.specValues) === JSON.stringify(specValues),
@@ -39,11 +52,13 @@ export const useCartStore = defineStore('cart', () => {
   }
 
   async function removeItem(id: number) {
+    ensureItemsArray()
     await removeCartItemApi(id)
     items.value = items.value.filter((item) => item.id !== id)
   }
 
   async function updateQuantity(id: number, quantity: number) {
+    ensureItemsArray()
     const { data } = await updateCartItemQuantityApi(id, quantity)
     const item = items.value.find((item) => item.id === id)
     if (item) {
@@ -52,6 +67,7 @@ export const useCartStore = defineStore('cart', () => {
   }
 
   function toggleSelect(id: number) {
+    ensureItemsArray()
     const item = items.value.find((item) => item.id === id)
     if (item) {
       item.selected = !item.selected
@@ -59,6 +75,7 @@ export const useCartStore = defineStore('cart', () => {
   }
 
   function toggleSelectAll() {
+    ensureItemsArray()
     const allSelected = items.value.every((item) => item.selected)
     items.value.forEach((item) => {
       item.selected = !allSelected

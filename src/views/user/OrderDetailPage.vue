@@ -4,15 +4,18 @@ import { useRoute, useRouter } from 'vue-router'
 import { Tag, Button, showConfirmDialog, showToast } from 'vant'
 import AppHeader from '@/components/AppHeader.vue'
 import { useOrderStore } from '@/stores/order'
+import { usePickupStore } from '@/stores/pickup'
 import { formatPrice, formatDate, formatOrderStatus } from '@/utils/format'
 import type { Order } from '@/types'
 
 const route = useRoute()
 const router = useRouter()
 const orderStore = useOrderStore()
+const pickupStore = usePickupStore()
 
 const orderId = Number(route.params.id)
 const order = computed(() => orderStore.currentOrder)
+const isPickupOrder = computed(() => order.value?.deliveryType === 'pickup')
 
 const statusBannerColor = computed(() => {
   const map: Record<string, string> = {
@@ -36,10 +39,10 @@ const statusIcon = computed(() => {
   return map[order.value?.status || ''] || 'info-o'
 })
 
-const deliveryFee = 5
+const deliveryFee = computed(() => isPickupOrder.value ? 0 : 5)
 const discount = computed(() => {
   if (!order.value) return 0
-  return order.value.totalAmount - order.value.payAmount - deliveryFee
+  return order.value.totalAmount - order.value.payAmount - deliveryFee.value
 })
 
 const onCancel = () => {
@@ -64,6 +67,10 @@ const onRebuy = () => {
   router.push('/')
 }
 
+const onViewPickupCode = () => {
+  router.push(`/pickup/code/${orderId}`)
+}
+
 onMounted(() => {
   orderStore.fetchOrderById(orderId)
 })
@@ -79,7 +86,33 @@ onMounted(() => {
         <span class="status-banner__text">{{ formatOrderStatus(order.status) }}</span>
       </div>
 
-      <div v-if="order.address" class="address-section">
+      <div v-if="isPickupOrder && order.pickupInfo" class="pickup-section">
+        <van-icon name="shop-o" size="20" color="#2DB87B" />
+        <div class="pickup-section__info">
+          <div class="pickup-section__header">
+            <span class="pickup-section__name">{{ order.pickupInfo.store?.name }}</span>
+            <van-tag type="primary" plain class="pickup-section__tag">自提</van-tag>
+          </div>
+          <p class="pickup-section__address">
+            {{ order.pickupInfo.store?.address }}
+          </p>
+          <div class="pickup-section__time">
+            <van-icon name="clock-o" size="12" color="#999" />
+            <span>取货时段: {{ order.pickupInfo.timeSlot?.label }}</span>
+          </div>
+        </div>
+        <van-button
+          v-if="order.status === 'paid'"
+          type="primary"
+          size="small"
+          class="pickup-section__btn"
+          @click="onViewPickupCode"
+        >
+          取货码
+        </van-button>
+      </div>
+
+      <div v-else-if="order.address" class="address-section">
         <van-icon name="location-o" size="20" color="#2DB87B" />
         <div class="address-section__info">
           <div class="address-section__row">
@@ -112,8 +145,8 @@ onMounted(() => {
           <span>¥{{ formatPrice(order.totalAmount) }}</span>
         </div>
         <div class="price-row">
-          <span>配送费</span>
-          <span>¥{{ formatPrice(deliveryFee) }}</span>
+          <span>{{ isPickupOrder ? '自提' : '配送费' }}</span>
+          <span>{{ isPickupOrder ? '免运费' : `¥${formatPrice(deliveryFee)}` }}</span>
         </div>
         <div class="price-row" v-if="discount > 0">
           <span>优惠</span>
@@ -200,6 +233,66 @@ onMounted(() => {
   &__text {
     font-size: 18px;
     font-weight: 600;
+  }
+}
+
+.pickup-section {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: $bg-card;
+  margin: 12px 16px;
+  padding: 14px 16px;
+  border-radius: $radius-lg;
+  box-shadow: $shadow;
+  position: relative;
+
+  &__info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  &__name {
+    font-size: 15px;
+    font-weight: 600;
+    color: $text-primary;
+  }
+
+  &__tag {
+    font-size: 10px;
+  }
+
+  &__address {
+    font-size: 13px;
+    color: $text-secondary;
+    line-height: 1.5;
+    margin-bottom: 6px;
+  }
+
+  &__time {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: $text-secondary;
+  }
+
+  &__btn {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 16px;
+    padding: 0 16px;
+    height: 32px;
+    font-size: 13px;
   }
 }
 

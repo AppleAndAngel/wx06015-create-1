@@ -2,23 +2,28 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
-import { Cell, CellGroup, RadioGroup, Radio, Button, Popup, Icon, showToast } from 'vant'
+import { Cell, CellGroup, RadioGroup, Radio, Button, Popup, Icon, showToast, Tag } from 'vant'
 import AppHeader from '@/components/AppHeader.vue'
 import { useCartStore } from '@/stores/cart'
 import { useAddressStore } from '@/stores/address'
 import { useOrderStore } from '@/stores/order'
 import { useUserStore } from '@/stores/user'
+import { usePickupStore } from '@/stores/pickup'
 import { formatPrice } from '@/utils/format'
-import type { OrderItem, Address, Coupon } from '@/types'
+import type { OrderItem, Address, Coupon, DeliveryType } from '@/types'
 
 const router = useRouter()
 const cartStore = useCartStore()
 const addressStore = useAddressStore()
 const orderStore = useOrderStore()
 const userStore = useUserStore()
+const pickupStore = usePickupStore()
 
 const { selectedItems, totalAmount } = storeToRefs(cartStore)
 const { defaultAddress, addresses } = storeToRefs(addressStore)
+const { selectedStore, selectedTimeSlot, pickupInfo, isPickupReady } = storeToRefs(pickupStore)
+
+const deliveryType = ref<DeliveryType>(pickupStore.deliveryType || 'delivery')
 
 const paymentMethod = ref<'wechat' | 'alipay' | 'balance'>('wechat')
 const showAddressPopup = ref(false)
@@ -29,7 +34,10 @@ const submitting = ref(false)
 
 const currentAddress = computed(() => selectedAddress.value ?? defaultAddress.value)
 
-const deliveryFee = computed(() => (totalAmount.value >= 39 ? 0 : 5))
+const deliveryFee = computed(() => {
+  if (deliveryType.value === 'pickup') return 0
+  return totalAmount.value >= 39 ? 0 : 5
+})
 
 const availableCoupons = computed(() => {
   return userStore.availableCoupons.filter(c => {
@@ -126,20 +134,47 @@ function specText(specValues: Record<string, string>) {
   return Object.values(specValues).join(' / ')
 }
 
+function onDeliveryTypeChange(type: DeliveryType) {
+  deliveryType.value = type
+  pickupStore.setDeliveryType(type)
+}
+
+function onSelectPickupStore() {
+  router.push({ path: '/pickup/stores', query: { select: '1' } })
+}
+
+function onChangePickupStore() {
+  router.push({ path: '/pickup/stores', query: { select: '1' } })
+}
+
+function onChangeTimeSlot() {
+  router.push({ path: '/pickup/time-slot', query: { select: '1' } })
+}
+
 async function onSubmit() {
-  if (!currentAddress.value) {
+  if (deliveryType.value === 'delivery' && !currentAddress.value) {
     router.push('/user/address/edit')
+    return
+  }
+  if (deliveryType.value === 'pickup' && !isPickupReady.value) {
+    showToast('请选择自提点和取货时段')
     return
   }
   if (submitting.value) return
   submitting.value = true
   try {
-    const order = await orderStore.createOrder({
+    const orderData: any = {
       items: orderItems.value,
       totalAmount: totalAmount.value,
       payAmount: payAmount.value,
-      address: currentAddress.value,
-    })
+      deliveryType: deliveryType.value,
+    }
+    if (deliveryType.value === 'delivery') {
+      orderData.address = currentAddress.value
+    } else {
+      orderData.pickupInfo = pickupInfo.value
+    }
+    const order = await orderStore.createOrder(orderData)
     if (selectedCoupon.value) {
       userStore.useCoupon(selectedCoupon.value.id)
       if (userStore.userInfo) {
@@ -165,6 +200,9 @@ onMounted(async () => {
     return
   }
   addressStore.fetchAddresses()
+  if (deliveryType.value === 'pickup' && !selectedStore.value) {
+    pickupStore.fetchNearbyStores()
+  }
   try {
     await userStore.getCouponList()
   } catch (e) {
@@ -178,27 +216,88 @@ onMounted(async () => {
     <AppHeader title="确认订单" :show-back="true" @click-left="router.back()" />
 
     <div class="checkout-body">
-      <div class="address-card" @click="onChangeAddress" v-if="currentAddress">
-        <div class="address-card__icon">
-          <van-icon name="location" color="#2DB87B" size="20" />
-        </div>
-        <div class="address-card__info">
-          <div class="address-card__user">
-            <span class="address-card__name">{{ currentAddress.name }}</span>
-            <span class="address-card__phone">{{ currentAddress.phone }}</span>
+      <div class="delivery-type-section">
+        <div class="section-title">配送方式</div>
+        <div class="delivery-type-tabs">
+          <div
+            :class="['delivery-type-tab', { 'delivery-type-tab--active': deliveryType === 'delivery' }]"
+            @click="onDeliveryTypeChange('delivery')"
+          >
+            <van-icon name="logistics" size="18" :color="deliveryType === 'delivery' ? '#2DB87B' : '#999'" />
+            <span>快递配送</span>
           </div>
-          <div class="address-card__detail">
-            {{ currentAddress.province }}{{ currentAddress.city }}{{ currentAddress.district }}{{ currentAddress.detail }}
+          <div
+            :class="['delivery-type-tab', { 'delivery-type-tab--active': deliveryType === 'pickup' }]"
+            @click="onDeliveryTypeChange('pickup')"
+          >
+            <van-icon name="shop-o" size="18" :color="deliveryType === 'pickup' ? '#2DB87B' : '#999'" />
+            <span>门店自提</span>
+            <van-tag v-if="deliveryType === 'pickup'" type="primary" plain class="delivery-type-tag">
+              免运费
+            </van-tag>
           </div>
         </div>
-        <van-icon name="arrow" class="address-card__arrow" />
       </div>
 
-      <div class="address-card address-card--empty" @click="onChangeAddress" v-else>
-        <van-icon name="add-o" size="20" color="#2DB87B" />
-        <span class="address-card__add">添加收货地址</span>
-        <van-icon name="arrow" class="address-card__arrow" />
-      </div>
+      <template v-if="deliveryType === 'delivery'">
+        <div class="address-card" @click="onChangeAddress" v-if="currentAddress">
+          <div class="address-card__icon">
+            <van-icon name="location" color="#2DB87B" size="20" />
+          </div>
+          <div class="address-card__info">
+            <div class="address-card__user">
+              <span class="address-card__name">{{ currentAddress.name }}</span>
+              <span class="address-card__phone">{{ currentAddress.phone }}</span>
+            </div>
+            <div class="address-card__detail">
+              {{ currentAddress.province }}{{ currentAddress.city }}{{ currentAddress.district }}{{ currentAddress.detail }}
+            </div>
+          </div>
+          <van-icon name="arrow" class="address-card__arrow" />
+        </div>
+
+        <div class="address-card address-card--empty" @click="onChangeAddress" v-else>
+          <van-icon name="add-o" size="20" color="#2DB87B" />
+          <span class="address-card__add">添加收货地址</span>
+          <van-icon name="arrow" class="address-card__arrow" />
+        </div>
+      </template>
+
+      <template v-else>
+        <div class="pickup-section">
+          <div class="pickup-card" @click="onChangePickupStore">
+            <div class="pickup-card__header" v-if="selectedStore">
+              <van-icon name="shop-o" size="18" color="#2DB87B" />
+              <span class="pickup-card__name">{{ selectedStore.name }}</span>
+              <span class="pickup-card__distance">{{ selectedStore.distance }}</span>
+            </div>
+            <div class="pickup-card__header pickup-card__header--empty" v-else>
+              <van-icon name="add-o" size="18" color="#2DB87B" />
+              <span class="pickup-card__select">选择自提点</span>
+            </div>
+            <div class="pickup-card__address" v-if="selectedStore">
+              {{ selectedStore.address }}
+            </div>
+            <van-icon name="arrow" class="pickup-card__arrow" />
+          </div>
+
+          <div class="pickup-card pickup-card--time" @click="onChangeTimeSlot">
+            <div class="pickup-card__header">
+              <van-icon name="clock-o" size="18" :color="selectedTimeSlot ? '#2DB87B' : '#999'" />
+              <span class="pickup-card__time-label">{{ selectedTimeSlot ? '取货时段' : '选择取货时段' }}</span>
+            </div>
+            <div class="pickup-card__time-value" v-if="selectedTimeSlot">
+              {{ selectedTimeSlot.label }}
+            </div>
+            <van-icon name="arrow" class="pickup-card__arrow" />
+          </div>
+
+          <div class="pickup-tip" v-if="selectedStore && selectedTimeSlot">
+            <van-icon name="info-o" size="14" color="#FFB946" />
+            <span>请在 {{ selectedTimeSlot.label }} 到店取货，超时订单将自动取消</span>
+          </div>
+        </div>
+      </template>
 
       <div class="section product-list">
         <div class="section-title">商品清单</div>
@@ -342,6 +441,151 @@ onMounted(async () => {
 
 .checkout-body {
   padding: 12px;
+}
+
+.delivery-type-section {
+  background: $bg-card;
+  border-radius: $radius-md;
+  padding: 0 12px 14px;
+  margin-bottom: 12px;
+  box-shadow: $shadow;
+}
+
+.delivery-type-tabs {
+  display: flex;
+  gap: 10px;
+}
+
+.delivery-type-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  background: #fff;
+  font-size: 14px;
+  color: $text-secondary;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &--active {
+    border-color: $primary;
+    background: $primary-light;
+    color: $primary;
+    font-weight: 500;
+  }
+}
+
+.delivery-type-tag {
+  margin-left: 4px;
+  font-size: 10px;
+}
+
+.pickup-section {
+  margin-bottom: 12px;
+}
+
+.pickup-card {
+  display: flex;
+  align-items: center;
+  background: $bg-card;
+  border-radius: $radius-md;
+  padding: 14px 12px;
+  margin-bottom: 10px;
+  box-shadow: $shadow;
+
+  &__header {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+
+    &--empty {
+      margin-bottom: 0;
+    }
+  }
+
+  &__name {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 600;
+    color: $text-primary;
+  }
+
+  &__select {
+    font-size: 14px;
+    color: $primary;
+    font-weight: 500;
+  }
+
+  &__distance {
+    font-size: 13px;
+    font-weight: 600;
+    color: $primary;
+    flex-shrink: 0;
+  }
+
+  &__address {
+    position: absolute;
+    left: 40px;
+    bottom: 14px;
+    right: 30px;
+    font-size: 12px;
+    color: $text-secondary;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__arrow {
+    flex-shrink: 0;
+    color: $text-secondary;
+  }
+
+  &--time {
+    padding: 14px 12px;
+  }
+
+  &__time-label {
+    flex: 1;
+    font-size: 14px;
+    color: $text-primary;
+    font-weight: 500;
+  }
+
+  &__time-value {
+    position: absolute;
+    left: 40px;
+    bottom: 14px;
+    right: 30px;
+    font-size: 12px;
+    color: $text-secondary;
+  }
+
+  & {
+    position: relative;
+    min-height: 56px;
+  }
+
+  &--time {
+    min-height: 48px;
+  }
+}
+
+.pickup-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 10px 12px;
+  background: #FFF8E6;
+  border-radius: $radius-md;
+  font-size: 12px;
+  color: $text-secondary;
+  line-height: 1.5;
 }
 
 .address-card {
