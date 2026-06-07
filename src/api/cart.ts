@@ -1,7 +1,8 @@
-import type { CartItem } from '@/types'
+import type { CartItem, Product } from '@/types'
 import { getItem, setItem } from '@/utils/storage'
+import { getProductById } from '@/api/product'
 
-const CART_KEY = 'cart'
+const CART_KEY = 'cart-api'
 
 function delay(ms: number = 300): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
@@ -53,29 +54,29 @@ export function fetchCart(): Promise<{ data: CartItem[] }> {
   return delay().then(() => ({ data: getCartItems() }))
 }
 
-export function addCartItem(productId: number, specValues: Record<string, string>, quantity: number): Promise<{ data: CartItem }> {
-  return delay().then(() => {
-    const items = getCartItems()
-    const existing = items.find(
-      (i) => i.productId === productId && JSON.stringify(i.specValues) === JSON.stringify(specValues)
-    )
-    if (existing) {
-      existing.quantity += quantity
-      setItem(CART_KEY, items)
-      return { data: existing }
-    }
-    const newItem: CartItem = {
-      id: Date.now(),
-      productId,
-      product: items.find((i) => i.productId === productId)?.product || items[0]?.product || {} as any,
-      specValues,
-      quantity,
-      selected: true,
-    }
-    items.push(newItem)
+export async function addCartItem(productId: number, specValues: Record<string, string>, quantity: number): Promise<{ data: CartItem }> {
+  await delay()
+  const items = getCartItems()
+  const existing = items.find(
+    (i) => i.productId === productId && JSON.stringify(i.specValues) === JSON.stringify(specValues)
+  )
+  if (existing) {
+    existing.quantity += quantity
     setItem(CART_KEY, items)
-    return { data: newItem }
-  })
+    return { data: existing }
+  }
+  const product = await getProductById(productId)
+  const newItem: CartItem = {
+    id: Date.now(),
+    productId,
+    product: product as Product,
+    specValues,
+    quantity,
+    selected: true,
+  }
+  items.push(newItem)
+  setItem(CART_KEY, items)
+  return { data: newItem }
 }
 
 export function updateCartItemQuantity(id: number, quantity: number): Promise<{ data: CartItem }> {

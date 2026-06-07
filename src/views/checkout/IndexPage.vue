@@ -98,6 +98,10 @@ function formatCouponCondition(coupon: Coupon): string {
   return `满${coupon.minAmount}可用`
 }
 
+watch(() => pickupStore.deliveryType, (newType) => {
+  deliveryType.value = newType
+}, { immediate: true })
+
 watch(totalAmount, () => {
   if (selectedCoupon.value && selectedCoupon.value.minAmount > totalAmount.value) {
     selectedCoupon.value = null
