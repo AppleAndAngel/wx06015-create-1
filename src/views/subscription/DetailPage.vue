@@ -37,6 +37,7 @@ const showAddressPopup = ref(false)
 const showCyclePopup = ref(false)
 const showDatePicker = ref(false)
 const customStartDate = ref('')
+const datePickerValue = ref<string[]>([])
 
 const cycleOptions = [
   { text: '每日配送', value: 'daily' },
@@ -156,8 +157,7 @@ function handleWeekdayConfirm() {
   showWeekdayPopup.value = false
 }
 
-function handleCycleConfirm(value: any) {
-  selectedCycle.value = value[0].value
+function handleCycleConfirm() {
   if (selectedCycle.value === 'daily') {
     selectedWeekdays.value = [1, 2, 3, 4, 5]
   } else if (selectedWeekdays.value.length === 0) {
@@ -253,6 +253,7 @@ onMounted(async () => {
   try {
     await Promise.all([
       subscriptionStore.fetchProduct(productId.value),
+      subscriptionStore.fetchMySubscriptions(),
       addressStore.fetchAddresses(),
     ])
 
@@ -486,7 +487,7 @@ watch(
         <div class="picker-popup__header">
           <span class="picker-popup__cancel" @click="showCyclePopup = false">取消</span>
           <span class="picker-popup__title">选择配送周期</span>
-          <span class="picker-popup__confirm" @click="handleCycleConfirm([{ value: selectedCycle }])">确定</span>
+          <span class="picker-popup__confirm" @click="handleCycleConfirm">确定</span>
         </div>
         <div class="picker-options">
           <div
@@ -592,6 +593,7 @@ watch(
       round
     >
       <van-date-picker
+        v-model="datePickerValue"
         :min-date="new Date(Date.now() + 24 * 60 * 60 * 1000)"
         :max-date="new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)"
         @confirm="handleDateConfirm"

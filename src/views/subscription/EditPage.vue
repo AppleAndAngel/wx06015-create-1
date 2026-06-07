@@ -31,6 +31,7 @@ const showAddressPopup = ref(false)
 const showCyclePopup = ref(false)
 const showDatePicker = ref(false)
 const customNextDate = ref('')
+const datePickerValue = ref<string[]>([])
 
 const cycleOptions = [
   { text: '每日配送', value: 'daily' },
@@ -573,6 +574,7 @@ onMounted(() => {
       round
     >
       <van-date-picker
+        v-model="datePickerValue"
         :min-date="new Date(Date.now() + 24 * 60 * 60 * 1000)"
         :max-date="new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)"
         @confirm="handleDateConfirm"
