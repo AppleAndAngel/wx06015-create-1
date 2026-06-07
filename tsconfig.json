@@ -17,8 +17,7 @@
       "@/*": ["./src/*"]
     },
     "typeRoots": ["./types", "./node_modules/@types"],
-    "lib": ["ES2018", "dom"],
-    "ignoreDeprecations": "6.0"
+    "lib": ["ES2018", "dom"]
   },
   "include": ["./src", "./types"],
   "exclude": ["node_modules"]

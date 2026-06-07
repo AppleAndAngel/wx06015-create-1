@@ -13,7 +13,9 @@ export default defineAppConfig({
     'pages/combo/index',
     'pages/address/index',
     'pages/address/edit',
-    'pages/checkout/index'
+    'pages/checkout/index',
+    'pages/points/index',
+    'pages/points/records'
   ],
   window: {
     backgroundTextStyle: 'light',

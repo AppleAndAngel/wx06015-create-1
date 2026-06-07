@@ -1,0 +1,286 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: $color-bg-page;
+}
+
+.tabs {
+  display: flex;
+  background: $color-bg-card;
+  padding: $spacing-sm $spacing-lg;
+  border-bottom: 1rpx solid $color-border-light;
+  position: sticky;
+  top: 0;
+  z-index: $z-index-float;
+}
+
+.tabItem {
+  flex: 1;
+  text-align: center;
+  padding: $spacing-md 0;
+  font-size: $font-size-base;
+  color: $color-text-secondary;
+  position: relative;
+
+  &.active {
+    color: $color-primary;
+    font-weight: 600;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 48rpx;
+      height: 6rpx;
+      background: $color-primary;
+      border-radius: 3rpx;
+    }
+  }
+}
+
+.pointsTab {
+  display: flex;
+  background: $color-bg-card;
+  padding: 0 $spacing-lg;
+  border-bottom: 1rpx solid $color-border-light;
+}
+
+.subTabItem {
+  padding: $spacing-md $spacing-lg;
+  font-size: $font-size-base;
+  color: $color-text-secondary;
+
+  &.active {
+    color: $color-primary;
+    font-weight: 600;
+  }
+}
+
+.recordList {
+  flex: 1;
+  padding: $spacing-lg;
+}
+
+.recordCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+}
+
+.recordHeader {
+  @include flex-between;
+  margin-bottom: $spacing-md;
+  padding-bottom: $spacing-md;
+  border-bottom: 1rpx solid $color-border-light;
+}
+
+.recordTime {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.recordStatus {
+  font-size: $font-size-sm;
+  font-weight: 500;
+
+  &.pending {
+    color: $color-warning;
+  }
+
+  &.shipped {
+    color: $color-info;
+  }
+
+  &.completed {
+    color: $color-success;
+  }
+
+  &.cancelled {
+    color: $color-text-tertiary;
+  }
+}
+
+.recordContent {
+  display: flex;
+  gap: $spacing-md;
+}
+
+.recordImage {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: $radius-md;
+  flex-shrink: 0;
+  background: $color-bg-page;
+}
+
+.recordInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.recordName {
+  font-size: $font-size-base;
+  color: $color-text-primary;
+  font-weight: 500;
+  @include text-ellipsis-multi(2);
+  line-height: 1.4;
+}
+
+.recordMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.recordQuantity {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.recordPoints {
+  font-size: $font-size-lg;
+  font-weight: 700;
+  color: $color-primary;
+}
+
+.recordFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: $spacing-md;
+  margin-top: $spacing-md;
+  padding-top: $spacing-md;
+  border-top: 1rpx solid $color-border-light;
+}
+
+.recordBtn {
+  padding: $spacing-sm $spacing-lg;
+  border-radius: $radius-button;
+  font-size: $font-size-sm;
+  font-weight: 500;
+
+  &.primary {
+    background: $color-primary;
+    color: $color-text-white;
+  }
+
+  &.secondary {
+    background: $color-bg-page;
+    color: $color-text-secondary;
+  }
+}
+
+.trackingInfo {
+  margin-top: $spacing-md;
+  padding: $spacing-md;
+  background: $color-bg-page;
+  border-radius: $radius-md;
+}
+
+.trackingCompany {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-xs;
+}
+
+.trackingNumber {
+  font-size: $font-size-base;
+  color: $color-text-primary;
+  font-weight: 500;
+}
+
+.addressInfo {
+  margin-top: $spacing-md;
+  padding: $spacing-md;
+  background: $color-bg-page;
+  border-radius: $radius-md;
+}
+
+.addressTitle {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-xs;
+}
+
+.addressDetail {
+  font-size: $font-size-base;
+  color: $color-text-primary;
+  line-height: 1.5;
+}
+
+.pointsRecordItem {
+  @include flex-between;
+  padding: $spacing-lg;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+}
+
+.pointsRecordLeft {
+  flex: 1;
+}
+
+.pointsRecordDesc {
+  font-size: $font-size-base;
+  color: $color-text-primary;
+  font-weight: 500;
+  margin-bottom: $spacing-xs;
+}
+
+.pointsRecordTime {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.pointsRecordRight {
+  text-align: right;
+}
+
+.pointsRecordValue {
+  font-size: $font-size-lg;
+  font-weight: 700;
+
+  &.earn {
+    color: $color-primary;
+  }
+
+  &.spend {
+    color: $color-error;
+  }
+}
+
+.emptyState {
+  padding: $spacing-xxl * 2 0;
+  text-align: center;
+}
+
+.emptyIcon {
+  font-size: 120rpx;
+  margin-bottom: $spacing-md;
+  opacity: 0.5;
+}
+
+.emptyText {
+  font-size: $font-size-base;
+  color: $color-text-tertiary;
+  margin-bottom: $spacing-xl;
+}
+
+.emptyBtn {
+  display: inline-block;
+  padding: $spacing-md $spacing-xxl;
+  background: $color-primary;
+  color: $color-text-white;
+  border-radius: $radius-button;
+  font-size: $font-size-base;
+  font-weight: 500;
+}

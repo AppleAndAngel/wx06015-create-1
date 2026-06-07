@@ -129,3 +129,56 @@ export interface AddressStore {
   getDefaultAddress: () => Address | undefined
   getSelectedAddress: () => Address | undefined
 }
+
+export type PointsProductCategory = 'snack' | 'coupon' | 'merchandise'
+
+export interface PointsProduct {
+  id: string
+  name: string
+  category: PointsProductCategory
+  categoryName: string
+  points: number
+  originalPrice?: number
+  image: string
+  description: string
+  stock: number
+  sales: number
+  exchangeLimit?: number
+  tags: string[]
+  validDays?: number
+}
+
+export type ExchangeStatus = 'pending' | 'shipped' | 'completed' | 'cancelled'
+
+export interface ExchangeRecord {
+  id: string
+  product: PointsProduct
+  quantity: number
+  totalPoints: number
+  status: ExchangeStatus
+  statusText: string
+  exchangedAt: number
+  address?: Address
+  trackingNumber?: string
+  trackingCompany?: string
+}
+
+export interface PointsRecord {
+  id: string
+  type: 'earn' | 'spend'
+  points: number
+  description: string
+  relatedId?: string
+  createdAt: number
+}
+
+export interface PointsStore {
+  userPoints: number
+  pointsRecords: PointsRecord[]
+  exchangeRecords: ExchangeRecord[]
+  getProducts: () => PointsProduct[]
+  exchangeProduct: (productId: string, quantity: number, addressId?: string) => boolean
+  getExchangeRecords: () => ExchangeRecord[]
+  getPointsRecords: () => PointsRecord[]
+  addPoints: (points: number, description: string, relatedId?: string) => void
+}

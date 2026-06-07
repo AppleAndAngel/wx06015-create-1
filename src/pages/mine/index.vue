@@ -5,26 +5,38 @@ import Taro from '@tarojs/taro'
 import { useCompareStore } from '@/stores/compare'
 import { useCartStore } from '@/stores/cart'
 import { useArrivalStore } from '@/stores/arrival'
+import { usePointsStore } from '@/stores/points'
 import styles from './index.module.scss'
 
 const compareStore = useCompareStore()
 const cartStore = useCartStore()
 const arrivalStore = useArrivalStore()
+const pointsStore = usePointsStore()
 
 const compareCount = computed(() => compareStore.count)
 const cartCount = computed(() => cartStore.totalCount)
 const arrivalCount = computed(() => arrivalStore.count)
 const arrivalInStockCount = computed(() => arrivalStore.inStockCount)
+const userPoints = computed(() => pointsStore.userPoints)
 
 const menuItems = computed(() => [
   { id: 'order', icon: '📋', label: '我的订单', path: '/pages/order/index' },
   { id: 'favorite', icon: '❤️', label: '我的收藏', path: '/pages/favorite/index' },
   { id: 'arrival', icon: '🔔', label: '到货提醒', path: '/pages/arrival/index', badge: arrivalInStockCount.value > 0 ? arrivalInStockCount.value : null },
   { id: 'compare', icon: '⚖️', label: '商品对比', path: '/pages/compare/index', badge: compareCount.value > 0 ? compareCount.value : null },
+  { id: 'points', icon: '⭐', label: '积分商城', path: '/pages/points/index' },
   { id: 'address', icon: '📍', label: '送礼地址簿', path: '/pages/address/index' },
   { id: 'service', icon: '💬', label: '联系客服', path: '' },
   { id: 'settings', icon: '⚙️', label: '设置', path: '' }
 ])
+
+const goToPointsMall = () => {
+  Taro.navigateTo({ url: '/pages/points/index' })
+}
+
+const formatNumber = (num: number) => {
+  return num.toLocaleString()
+}
 
 const handleMenuClick = (item: typeof menuItems.value[0]) => {
   console.log('[Mine] 点击菜单:', item.label)
@@ -56,6 +68,20 @@ onMounted(() => {
       <view :class="styles.userInfo">
         <text :class="styles.userName">生鲜爱好者</text>
         <text :class="styles.userDesc">已注册30天</text>
+      </view>
+    </view>
+
+    <view :class="styles.pointsCard" @click="goToPointsMall">
+      <view :class="styles.pointsInfo">
+        <text :class="styles.pointsLabel">我的积分</text>
+        <view :class="styles.pointsValue">
+          <text>{{ formatNumber(userPoints) }}</text>
+          <text :class="styles.pointsUnit">积分</text>
+        </view>
+      </view>
+      <view :class="styles.pointsAction">
+        <text>去兑换</text>
+        <text>›</text>
       </view>
     </view>
 
