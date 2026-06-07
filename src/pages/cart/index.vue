@@ -38,9 +38,8 @@ const handleCheckout = () => {
     })
     return
   }
-  Taro.showToast({
-    title: '结算功能开发中',
-    icon: 'none'
+  Taro.navigateTo({
+    url: '/pages/checkout/index'
   })
 }
 

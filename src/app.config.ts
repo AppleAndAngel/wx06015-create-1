@@ -10,7 +10,10 @@ export default defineAppConfig({
     'pages/order/index',
     'pages/favorite/index',
     'pages/arrival/index',
-    'pages/combo/index'
+    'pages/combo/index',
+    'pages/address/index',
+    'pages/address/edit',
+    'pages/checkout/index'
   ],
   window: {
     backgroundTextStyle: 'light',

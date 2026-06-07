@@ -104,3 +104,28 @@ export interface ComboScene {
   icon: string
   description: string
 }
+
+export interface Address {
+  id: string
+  name: string
+  phone: string
+  province: string
+  city: string
+  district: string
+  detail: string
+  tag: string
+  isDefault: boolean
+  createdAt: number
+}
+
+export interface AddressStore {
+  addressList: Address[]
+  selectedAddressId: string | null
+  addAddress: (address: Omit<Address, 'id' | 'createdAt'>) => void
+  updateAddress: (id: string, address: Partial<Omit<Address, 'id' | 'createdAt'>>) => void
+  deleteAddress: (id: string) => void
+  setDefault: (id: string) => void
+  selectAddress: (id: string) => void
+  getDefaultAddress: () => Address | undefined
+  getSelectedAddress: () => Address | undefined
+}

@@ -21,7 +21,7 @@ const menuItems = computed(() => [
   { id: 'favorite', icon: '❤️', label: '我的收藏', path: '/pages/favorite/index' },
   { id: 'arrival', icon: '🔔', label: '到货提醒', path: '/pages/arrival/index', badge: arrivalInStockCount.value > 0 ? arrivalInStockCount.value : null },
   { id: 'compare', icon: '⚖️', label: '商品对比', path: '/pages/compare/index', badge: compareCount.value > 0 ? compareCount.value : null },
-  { id: 'address', icon: '📍', label: '收货地址', path: '' },
+  { id: 'address', icon: '📍', label: '送礼地址簿', path: '/pages/address/index' },
   { id: 'service', icon: '💬', label: '联系客服', path: '' },
   { id: 'settings', icon: '⚙️', label: '设置', path: '' }
 ])

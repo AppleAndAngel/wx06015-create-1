@@ -1,0 +1,420 @@
+@use '@/styles/variables.scss' as *;
+
+.container {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: 160rpx;
+  box-sizing: border-box;
+}
+
+.content {
+  padding: $spacing-lg;
+}
+
+.addressCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-card;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.addressCardEmpty {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-card;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 160rpx;
+  cursor: pointer;
+}
+
+.addAddressHint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-xs;
+  color: $color-text-secondary;
+}
+
+.addAddressIcon {
+  font-size: 48rpx;
+}
+
+.addAddressText {
+  font-size: $font-size-base;
+}
+
+.addressHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing-sm;
+}
+
+.addressName {
+  font-size: $font-size-md;
+  font-weight: 600;
+  color: $color-text-primary;
+  margin-right: $spacing-sm;
+}
+
+.addressPhone {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.addressTags {
+  display: flex;
+  gap: $spacing-xs;
+  margin-bottom: $spacing-sm;
+  flex-wrap: wrap;
+}
+
+.addressTag {
+  @include tag-base;
+  background: rgba(34, 197, 94, 0.1);
+  color: $color-primary;
+
+  &.defaultTag {
+    background: $color-primary;
+    color: #fff;
+  }
+}
+
+.addressDetail {
+  font-size: $font-size-base;
+  color: $color-text-secondary;
+  line-height: 1.5;
+  padding-right: 60rpx;
+}
+
+.addressArrow {
+  position: absolute;
+  right: $spacing-lg;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: $font-size-xl;
+  color: $color-text-tertiary;
+  font-weight: 300;
+}
+
+.changeAddressBtn {
+  position: absolute;
+  right: $spacing-lg;
+  top: $spacing-lg;
+  @include tag-base;
+  background: rgba(34, 197, 94, 0.1);
+  color: $color-primary;
+  font-size: $font-size-xs;
+  cursor: pointer;
+}
+
+.quickSwitch {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.quickSwitchTitle {
+  font-size: $font-size-md;
+  font-weight: 600;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
+.quickSwitchIcon {
+  font-size: $font-size-lg;
+}
+
+.addressOptions {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.addressOption {
+  display: flex;
+  align-items: flex-start;
+  padding: $spacing-md;
+  border-radius: $radius-md;
+  background: $color-bg-page;
+  cursor: pointer;
+  transition: all $transition-fast;
+  border: 2rpx solid transparent;
+
+  &.active {
+    background: rgba(34, 197, 94, 0.05);
+    border-color: $color-primary;
+  }
+}
+
+.optionRadio {
+  width: 36rpx;
+  height: 36rpx;
+  border: 2rpx solid $color-border;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 4rpx;
+  margin-right: $spacing-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all $transition-fast;
+
+  .active & {
+    background: $color-primary;
+    border-color: $color-primary;
+  }
+}
+
+.optionRadioInner {
+  width: 16rpx;
+  height: 16rpx;
+  background: #fff;
+  border-radius: 50%;
+}
+
+.optionContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.optionHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing-xs;
+  flex-wrap: wrap;
+  gap: $spacing-xs;
+}
+
+.optionName {
+  font-size: $font-size-base;
+  font-weight: 500;
+  color: $color-text-primary;
+}
+
+.optionPhone {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-left: $spacing-xs;
+}
+
+.optionTag {
+  @include tag-base;
+  background: rgba(34, 197, 94, 0.1);
+  color: $color-primary;
+  font-size: 20rpx;
+  padding: 2rpx 12rpx;
+
+  &.defaultTag {
+    background: $color-primary;
+    color: #fff;
+  }
+}
+
+.optionAddress {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: 1.4;
+  @include text-ellipsis;
+}
+
+.manageAddressBtn {
+  margin-top: $spacing-md;
+  padding: $spacing-sm;
+  text-align: center;
+  color: $color-primary;
+  font-size: $font-size-sm;
+  border-top: 1rpx solid $color-border;
+  padding-top: $spacing-md;
+  cursor: pointer;
+}
+
+.goodsSection {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.sectionTitle {
+  font-size: $font-size-md;
+  font-weight: 600;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+}
+
+.goodsList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.goodsItem {
+  display: flex;
+  gap: $spacing-md;
+}
+
+.goodsImage {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: $radius-md;
+  flex-shrink: 0;
+  background: $color-bg-page;
+}
+
+.goodsInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.goodsName {
+  font-size: $font-size-base;
+  color: $color-text-primary;
+  line-height: 1.4;
+  @include text-ellipsis;
+}
+
+.goodsSpec {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-top: $spacing-xs;
+}
+
+.goodsBottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.goodsPrice {
+  font-size: $font-size-md;
+  font-weight: 600;
+  color: $color-price;
+}
+
+.goodsQuantity {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.summarySection {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-sm;
+
+  &:last-child {
+    margin-bottom: 0;
+    padding-top: $spacing-md;
+    border-top: 1rpx solid $color-border;
+  }
+}
+
+.summaryLabel {
+  font-size: $font-size-base;
+  color: $color-text-secondary;
+}
+
+.summaryValue {
+  font-size: $font-size-base;
+  color: $color-text-primary;
+
+  &.highlight {
+    color: $color-price;
+    font-weight: 600;
+    font-size: $font-size-lg;
+  }
+}
+
+.remarkSection {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.remarkInput {
+  width: 100%;
+  font-size: $font-size-base;
+  color: $color-text-primary;
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  border: none;
+  outline: none;
+  line-height: 1.5;
+  min-height: 80rpx;
+  margin-top: $spacing-sm;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 140rpx;
+  background: #fff;
+  border-top: 1rpx solid $color-border;
+  display: flex;
+  align-items: center;
+  padding: $spacing-lg;
+  box-sizing: border-box;
+  z-index: 100;
+}
+
+.footerTotal {
+  flex: 1;
+}
+
+.footerLabel {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.footerPrice {
+  font-size: $font-size-xl;
+  font-weight: 700;
+  color: $color-price;
+}
+
+.submitBtn {
+  width: 240rpx;
+  height: 88rpx;
+  background: $color-primary;
+  color: #fff;
+  border-radius: $radius-button;
+  border: none;
+  font-size: $font-size-md;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:disabled {
+    background: $color-border;
+    color: $color-text-tertiary;
+  }
+}

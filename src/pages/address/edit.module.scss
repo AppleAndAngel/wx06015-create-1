@@ -1,0 +1,228 @@
+@use '@/styles/variables.scss' as *;
+
+.container {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: 140rpx;
+  box-sizing: border-box;
+}
+
+.content {
+  padding: $spacing-lg;
+}
+
+.form {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  box-shadow: $shadow-card;
+}
+
+.formItem {
+  display: flex;
+  align-items: flex-start;
+  padding: $spacing-lg;
+  border-bottom: 1rpx solid $color-border;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.label {
+  width: 160rpx;
+  flex-shrink: 0;
+  font-size: $font-size-base;
+  color: $color-text-primary;
+  font-weight: 500;
+  padding-top: $spacing-xs;
+}
+
+.inputWrapper {
+  flex: 1;
+}
+
+.input {
+  width: 100%;
+  font-size: $font-size-base;
+  color: $color-text-primary;
+  background: none;
+  border: none;
+  outline: none;
+  padding: 0;
+  line-height: 1.5;
+}
+
+.regionPicker {
+  width: 100%;
+  font-size: $font-size-base;
+  color: $color-text-primary;
+  padding: 0;
+  line-height: 1.5;
+  min-height: 48rpx;
+  display: flex;
+  align-items: center;
+}
+
+.placeholder {
+  color: $color-text-placeholder;
+}
+
+.textarea {
+  width: 100%;
+  font-size: $font-size-base;
+  color: $color-text-primary;
+  background: none;
+  border: none;
+  outline: none;
+  padding: 0;
+  line-height: 1.5;
+  min-height: 120rpx;
+  resize: none;
+}
+
+.tagSection {
+  margin-top: $spacing-lg;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.tagTitle {
+  font-size: $font-size-base;
+  color: $color-text-primary;
+  font-weight: 500;
+  margin-bottom: $spacing-md;
+}
+
+.tagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+}
+
+.tagItem {
+  @include tag-base;
+  padding: $spacing-sm $spacing-md;
+  background: $color-bg-page;
+  color: $color-text-secondary;
+  border: 2rpx solid transparent;
+  font-size: $font-size-sm;
+  transition: all $transition-fast;
+  cursor: pointer;
+
+  &.active {
+    background: rgba(34, 197, 94, 0.1);
+    color: $color-primary;
+    border-color: $color-primary;
+  }
+
+  &.custom {
+    border: 2rpx dashed $color-border;
+    background: none;
+  }
+}
+
+.defaultSection {
+  margin-top: $spacing-lg;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.defaultLabel {
+  font-size: $font-size-base;
+  color: $color-text-primary;
+}
+
+.defaultDesc {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-top: $spacing-xs;
+}
+
+.switch {
+  width: 96rpx;
+  height: 52rpx;
+  background: $color-border;
+  border-radius: 26rpx;
+  position: relative;
+  transition: all $transition-fast;
+  cursor: pointer;
+
+  &.active {
+    background: $color-primary;
+  }
+}
+
+.switchKnob {
+  width: 48rpx;
+  height: 48rpx;
+  background: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 2rpx;
+  left: 2rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.15);
+  transition: all $transition-fast;
+
+  .switch.active & {
+    left: 46rpx;
+  }
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120rpx;
+  background: #fff;
+  border-top: 1rpx solid $color-border;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-lg;
+  box-sizing: border-box;
+  z-index: 100;
+}
+
+.saveBtn {
+  flex: 1;
+  height: 88rpx;
+  background: $color-primary;
+  color: #fff;
+  border-radius: $radius-button;
+  border: none;
+  font-size: $font-size-md;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:disabled {
+    background: $color-border;
+    color: $color-text-tertiary;
+  }
+}
+
+.deleteBtn {
+  flex: 1;
+  height: 88rpx;
+  background: $color-bg-page;
+  color: $color-error;
+  border-radius: $radius-button;
+  border: none;
+  font-size: $font-size-md;
+  font-weight: 500;
+  margin-right: $spacing-md;
+  cursor: pointer;
+}
+
+.footerBtns {
+  display: flex;
+  width: 100%;
+}
