@@ -56,7 +56,7 @@ function onSelectSlot(slot: PickupTimeSlot) {
   }
   pickupStore.selectTimeSlot(slot)
   if (selectMode.value) {
-    router.back()
+    router.replace('/checkout')
   }
 }
 
@@ -141,7 +141,7 @@ onMounted(() => {
         <div class="bottom-bar__label">已选时段</div>
         <div class="bottom-bar__value">{{ selectedSlot.label }}</div>
       </div>
-      <van-button type="primary" class="bottom-bar__btn" @click="router.back()">
+      <van-button type="primary" class="bottom-bar__btn" @click="router.replace('/checkout')">
         确认选择
       </van-button>
     </div>

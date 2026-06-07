@@ -6,6 +6,7 @@ import {
   fetchOrderById as fetchOrderByIdApi,
   cancelOrder as cancelOrderApi,
   confirmReceive as confirmReceiveApi,
+  payOrder as payOrderApi,
 } from '@/api/order'
 import type { Order, CreateOrderData } from '@/types'
 
@@ -52,6 +53,18 @@ export const useOrderStore = defineStore('order', () => {
     }
   }
 
+  async function payOrder(id: number) {
+    const { data } = await payOrderApi(id)
+    const index = orders.value.findIndex((o) => o.id === id)
+    if (index !== -1) {
+      orders.value[index] = data
+    }
+    if (currentOrder.value?.id === id) {
+      currentOrder.value = data
+    }
+    return data
+  }
+
   return {
     orders,
     currentOrder,
@@ -60,5 +73,6 @@ export const useOrderStore = defineStore('order', () => {
     fetchOrderById,
     cancelOrder,
     confirmReceive,
+    payOrder,
   }
 })

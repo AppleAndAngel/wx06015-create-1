@@ -44,7 +44,7 @@ function onSelectStore(store: PickupStore) {
 
 function onConfirm(store: PickupStore) {
   pickupStore.selectStore(store)
-  router.back()
+  router.push({ path: '/pickup/time-slot', query: { select: '1' } })
 }
 
 function getTagColor(tag: string): string {
@@ -124,7 +124,7 @@ onMounted(() => {
             class="store-card__btn"
             @click.stop="onConfirm(store)"
           >
-            选择
+            选时段
           </van-button>
         </div>
 

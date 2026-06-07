@@ -30,6 +30,7 @@ const onPay = async () => {
   paying.value = true
   try {
     await new Promise((resolve) => setTimeout(resolve, 1500))
+    await orderStore.payOrder(orderId)
     showSuccess.value = true
 
     if (isPickupOrder.value && order.value?.pickupInfo?.store && order.value?.pickupInfo?.timeSlot) {

@@ -96,3 +96,16 @@ export function fetchOrderById(id: number): Promise<{ data: Order }> {
     return { data: order || ({} as Order) }
   })
 }
+
+export function payOrder(id: number): Promise<{ data: Order }> {
+  return delay().then(() => {
+    const orders = getOrdersFromStorage()
+    const order = orders.find((o) => o.id === id)
+    if (order) {
+      order.status = 'paid'
+      order.paidAt = new Date().toISOString()
+      setItem(ORDER_KEY, orders)
+    }
+    return { data: order || ({} as Order) }
+  })
+}
