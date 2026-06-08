@@ -159,6 +159,14 @@
   color: $color-text-primary;
 }
 
+.sectionCount {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  background: $color-bg-page;
+  padding: 4rpx 12rpx;
+  border-radius: $radius-sm;
+}
+
 .newBadge {
   font-size: $font-size-xs;
   font-weight: 600;
@@ -208,11 +216,30 @@
 .loadingMore {
   @include flex-center;
   padding: $spacing-lg 0;
+  gap: $spacing-xs;
+}
+
+.loadingDot {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  animation: loadingDot 1.4s ease-in-out infinite;
+  
+  @keyframes loadingDot {
+    0%, 80%, 100% {
+      opacity: 0.3;
+      transform: scale(0.8);
+    }
+    40% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
 }
 
 .loadingText {
   font-size: $font-size-sm;
   color: $color-text-tertiary;
+  margin-left: $spacing-xs;
 }
 
 .footer {

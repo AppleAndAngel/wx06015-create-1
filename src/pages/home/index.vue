@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { View, Text, ScrollView, Swiper, SwiperItem, Image } from '@tarojs/components'
-import Taro, { useDidShow, usePullDownRefresh, useReachBottom } from '@tarojs/taro'
+import Taro, { useDidShow, usePullDownRefresh } from '@tarojs/taro'
 import type { Product, Category } from '@/types'
 import { products, categories } from '@/mock/products'
 import { useArrivalStore } from '@/stores/arrival'
@@ -125,25 +125,36 @@ const sections = computed<Section[]>(() => {
   return result
 })
 
+const displayedProductIds = computed(() => {
+  const ids = new Set<string>()
+  sections.value.forEach(section => {
+    section.products.slice(0, 4).forEach(p => ids.add(p.id))
+  })
+  return ids
+})
+
+const availableProducts = computed(() => {
+  return products.filter(p => p.inStock && !displayedProductIds.value.has(p.id))
+})
+
 const paginatedProducts = ref<Product[]>([])
 
 const loadMoreProducts = () => {
   if (loading.value || !hasMore.value) return
   
   loading.value = true
-  console.log('[Home] 加载更多商品，第', page.value, '页')
+  console.log('[Home] 加载更多商品，第', page.value, '页，剩余可用商品:', availableProducts.value.length)
   
   setTimeout(() => {
-    const allProducts = products.filter(p => p.inStock)
     const start = (page.value - 1) * pageSize
     const end = start + pageSize
-    const newProducts = allProducts.slice(start, end)
+    const newProducts = availableProducts.value.slice(start, end)
     
     if (newProducts.length > 0) {
       paginatedProducts.value = [...paginatedProducts.value, ...newProducts]
       page.value++
       
-      if (end >= allProducts.length) {
+      if (end >= availableProducts.value.length) {
         hasMore.value = false
       }
     } else {
@@ -151,6 +162,7 @@ const loadMoreProducts = () => {
     }
     
     loading.value = false
+    console.log('[Home] 加载完成，当前更多好物数量:', paginatedProducts.value.length, '是否还有更多:', hasMore.value)
   }, 500)
 }
 
@@ -168,6 +180,7 @@ const handleRefresh = () => {
   const restockedProducts = arrivalStore.checkStockUpdates()
   if (restockedProducts.length > 0) {
     newArrivalProducts.value = restockedProducts
+    console.log('[Home] 新到货商品:', restockedProducts.map(p => p.name))
   }
   
   page.value = 1
@@ -192,6 +205,13 @@ const handleRefresh = () => {
       })
     }
   }, 800)
+}
+
+const handleScrollToLower = () => {
+  console.log('[Home] 滚动到底部，加载更多')
+  if (hasMore.value && !loading.value) {
+    loadMoreProducts()
+  }
 }
 
 const handleProductClick = (product: Product) => {
@@ -254,13 +274,6 @@ usePullDownRefresh(() => {
   handleRefresh()
 })
 
-useReachBottom(() => {
-  console.log('[Home] 触底加载更多')
-  if (hasMore.value && !loading.value) {
-    loadMoreProducts()
-  }
-})
-
 onMounted(() => {
   loadInitialProducts()
 })
@@ -275,7 +288,12 @@ onMounted(() => {
       </view>
     </view>
 
-    <scroll-view :class="styles.scrollView" scroll-y>
+    <scroll-view 
+      :class="styles.scrollView" 
+      scroll-y
+      :lower-threshold="100"
+      @scrolltolower="handleScrollToLower"
+    >
       <swiper
         :class="styles.swiper"
         :autoplay="true"
@@ -352,11 +370,12 @@ onMounted(() => {
         </view>
       </view>
 
-      <view :class="styles.moreSection">
+      <view :class="styles.moreSection" v-if="availableProducts.length > 0">
         <view :class="styles.sectionHeader">
           <view :class="styles.sectionTitleWrapper">
             <text :class="styles.sectionIcon">📦</text>
             <text :class="styles.sectionTitle">更多好物</text>
+            <text :class="styles.sectionCount">{{ availableProducts.length }}件</text>
           </view>
         </view>
         <view :class="styles.productGrid">
@@ -369,7 +388,10 @@ onMounted(() => {
         </view>
         
         <view v-if="loading" :class="styles.loadingMore">
-          <text :class="styles.loadingText">加载中...</text>
+          <text :class="styles.loadingDot">●</text>
+          <text :class="styles.loadingDot" style="animation-delay: 0.1s">●</text>
+          <text :class="styles.loadingDot" style="animation-delay: 0.2s">●</text>
+          <text :class="styles.loadingText">加载中</text>
         </view>
         
         <view v-else-if="!hasMore && paginatedProducts.length > 0" :class="styles.footer">
